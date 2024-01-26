@@ -29,8 +29,11 @@ import {
   faTractor,
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
-const DrawerNav = () => {
+import { useSelector } from "react-redux";
+const DrawerNav = ({ navigation }) => {
   let Drawer = createDrawerNavigator();
+  const chListe = useSelector((state) => state.chariot);
+  const { chariotListe } = chListe;
   function CustomDrawerContent(props) {
     return (
       <DrawerContentScrollView {...props}>
@@ -74,14 +77,39 @@ const DrawerNav = () => {
           headerTintColor: "white",
           headerRight: () => (
             <View style={{ display: "flex", flexDirection: "row" }}>
-              <TouchableOpacity style={{ marginRight: 20 }}>
+              <TouchableOpacity
+                style={{
+                  marginRight: 20,
+                  borderWidth: 0.9,
+                  borderColor: "white",
+                  padding: 5,
+                }}
+                onPress={() => navigation.navigate("ChariotMain")}
+              >
+                <Text style={{ color: "white", verticalAlign: "middle" }}>
+                  {chariotListe.reduce((acc, i) => acc + 1, 0)}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  marginRight: 20,
+                  alignContent: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <FontAwesomeIcon
                   size={20}
                   color="snow"
                   icon={faPersonCirclePlus}
                 />
               </TouchableOpacity>
-              <TouchableOpacity style={{ marginRight: 20 }}>
+              <TouchableOpacity
+                style={{
+                  marginRight: 20,
+                  alignContent: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <FontAwesomeIcon
                   size={20}
                   color="snow"

@@ -15,7 +15,10 @@ const ArticleListe = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
-        {articles && articles?.articles?.map((a) => <Article article={a} />)}
+        {articles &&
+          articles?.articles?.map((a) => (
+            <Article article={a} source="consult" />
+          ))}
       </ScrollView>
       <FAB
         style={{

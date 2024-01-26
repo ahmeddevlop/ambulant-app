@@ -2,7 +2,7 @@
 
 # dependencies
 node_modules/
-
+ambbulant-serv/node_modules/
 # Expo
 .expo/
 dist/

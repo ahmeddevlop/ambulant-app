@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Test from "../composants/Test";
 import VenteAcceuil from "../composants/article/VenteAcceuil";
+import ChariotMain from "../composants/commande/ChariotMain";
 
 const VenteStack = () => {
   const Stack = createNativeStackNavigator();
@@ -8,6 +8,7 @@ const VenteStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="VenteAcceuil" component={VenteAcceuil} />
+      <Stack.Screen name="ChariotMain" component={ChariotMain} />
     </Stack.Navigator>
   );
 };

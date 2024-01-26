@@ -4,27 +4,42 @@ import { useSelector, useDispatch } from "react-redux";
 import { Button, TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import axios from "redaxios";
-//import { openDatabase } from "react-native-sqlite-storage";
-//import SQLite from "react-native-sqlite";
+import * as SQLite from "expo-sqlite";
+import NetInfo from "@react-native-community/netinfo";
 import { familleCree } from "../../slices/familleSlice";
-
+import { famAjoutLoc, getDBConnection } from "../../slices/sqliteSlice";
 const FamilleCree = () => {
   const dispatch = useDispatch();
-  //const db = SQLite.openDatabase("test.db");
+  //const db = openDatabase("default.db");
   const [code_fam, setCodeFam] = useState("");
   const [lib_fam, setLibFam] = useState("");
   const [description, setDesc] = useState("");
   const [image, setImage] = useState(null);
   const [imgObj, setImgObj] = useState(null);
   const [loadImg, setLoadImg] = useState(false);
+  const [db, setDb] = useState(SQLite.openDatabase("example.db"));
+  const [reseau, setReseau] = useState(false);
   const famCree = useSelector((state) => state.famille);
   const { famille, loading, erreur } = famCree;
+  //const dbState = useSelector((state) => state.SQLiteState);
+  //const { db, erreur: errDB } = famCree;
   const uri = "http://192.168.1.21:5050";
-  useEffect(() => {}, []);
-  /*const dbLoc = async () => {
-    const db = await SQLite.openDatabaseAsync("databaseName");
-    console.log(db);
-  };*/
+  //var db = openDatabase({ name: "test.db", location: "default" });
+
+  useEffect(() => {
+    NetInfo.fetch().then((state) => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+      if (state.isConnected) {
+        alert("en ligne");
+        setReseau(true);
+      } else {
+        alert("hors ligne");
+        setReseau(false);
+      }
+    });
+  }, [famileAjout, db]);
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -66,74 +81,73 @@ const FamilleCree = () => {
       setLoadImg(false);
     }
   };
+
   const famileAjout = async () => {
     if (code_fam == "" || lib_fam == "" || description == "") {
       alert("Il faut remplir tous les champs!");
       console.log(code_fam, lib_fam, description);
     } else {
       try {
-        let imgServ = await handleUploadPhoto();
-        console.log(imgServ);
-        /*new Promise((resolve, reject) => {
-          db.transaction(function (tx) {
+        if (reseau) {
+          //Cas en ligne
+          let imgServ = await handleUploadPhoto();
+          dispatch(
+            familleCree({
+              code_fam,
+              lib_fam,
+              description,
+              image: imgServ,
+              societe: "65a8e394bd319d1efbd07f7f",
+              code_soc: "04",
+            })
+          );
+          db.transaction((tx) => {
             tx.executeSql(
-              "create table if not exists famille(id INTEGER PRIMARY KEY NOT NULL,code_fam text,lib_fam text,description text,image text)",
+              "CREATE TABLE IF NOT EXISTS familles (id INTEGER PRIMARY KEY AUTOINCREMENT, lib_fam TEXT,code_fam TEXT,description TEXT,image TEXT,societe TEXT,code_soc TEXT,synchro CHAR default 'N' )",
               null,
-              function () {
-                resolve(true);
-                console.log("Tableau cree avec succés!");
-              },
-              function (tx, error) {
-                reject(error.message);
-              }
+              (txObj, resultSet) => console.log("tab famille crée avec succés!")
             );
           });
-          db.transaction(function (tx) {
+          db.transaction((tx) => {
             tx.executeSql(
-              `insert into famille(code_fam,lib_fam,description,image) values('${code_fam}','${lib_fam}','${description}','${imgObj.assets[0].uri}')`,
+              `INSERT INTO familles (code_fam,lib_fam,description,image,societe,code_soc,synchro) values ('${code_fam}',
+            '${lib_fam}',
+            '${description}',
+            '${image}',
+            '65a8e394bd319d1efbd07f7f',
+            '04','O')`,
               null,
-
-              function () {
-                resolve(true);
-                console.log("Insertion faite avec succés!");
-              },
-              function (tx, error) {
-                reject(error.message);
-                console.log(error.message);
-              }
+              (txObj, resultSet) => console.log("ajout terminé avec succés!")
             );
           });
-          db.transaction(function (tx) {
+        } else {
+          //Cas Hors-ligne
+          db.transaction((tx) => {
             tx.executeSql(
-              "select * from famille",
+              "CREATE TABLE IF NOT EXISTS familles (id INTEGER PRIMARY KEY AUTOINCREMENT, lib_fam TEXT,code_fam TEXT,description TEXT,image TEXT,societe TEXT,code_soc TEXT,synchro CHAR default 'N')",
               null,
-              function (txObj, resultset) {
-                resolve(true);
-                console.log(resultset.rows._array);
-              },
-              function (tx, error) {
-                reject(error.message);
-              }
+              (txObj, resultSet) => console.log("tab famille crée avec succés!")
             );
           });
-        });*/
-
-        dispatch(
-          familleCree({
-            code_fam,
-            lib_fam,
-            description,
-            image: imgServ,
-            societe: "65a8e394bd319d1efbd07f7f",
-            code_soc: "04",
-          })
-        );
+          db.transaction((tx) => {
+            tx.executeSql(
+              `INSERT INTO familles (code_fam,lib_fam,description,image,societe,code_soc,synchro) values ('${code_fam}',
+              '${lib_fam}',
+              '${description}',
+              '${image}',
+              '65a8e394bd319d1efbd07f7f',
+              '04','N')`,
+              null,
+              (txObj, resultSet) => console.log("ajout terminé avec succés!")
+            );
+          });
+        }
 
         alert("Famille Crée avec Succés!");
-        setCodeFam("");
-        setLibFam("");
-        setDesc("");
-        setImage(null);
+        //setCodeFam("");
+        //setLibFam("");
+        //setDesc("");
+        //setImage(null);
       } catch (e) {
         console.log(e.message);
       }
@@ -161,7 +175,11 @@ const FamilleCree = () => {
         style={style.input}
       />
       <View>
-        <Button icon="camera" onPress={pickImage} disabled={loadImg || loading}>
+        <Button
+          icon="camera"
+          onPress={() => pickImage()}
+          disabled={loadImg || loading}
+        >
           {image ? "" : "Choisir une image!"}
         </Button>
         {image && (
