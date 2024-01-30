@@ -6,33 +6,29 @@ import * as ImagePicker from "expo-image-picker";
 import { Picker } from "@react-native-picker/picker";
 
 import axios from "redaxios";
-import { articleCree } from "../../slices/articleSlice";
-import { familleListe } from "../../slices/familleSlice";
+import { clientCree } from "../../slices/clientSlice";
 import { ScrollView } from "react-native-gesture-handler";
-const ArticleCree = () => {
+const ClientCree = () => {
   const dispatch = useDispatch();
-  const [code_art, setCodeArt] = useState("");
-  const [lib_art, setLibArt] = useState("");
-  const [pua, setPua] = useState(0);
-  const [puv, setPuv] = useState(0);
+  const [cod_cli, setCodeCli] = useState("");
+  const [nom_cli, setNomCli] = useState("");
+  const [abrv_cli, setAbrv] = useState("");
+  const [cin, setCin] = useState(0);
   const [image, setImage] = useState(null);
   const [imgObj, setImgObj] = useState(null);
 
-  const [stock, setStock] = useState(0);
-  const [code_bar, setCodeBar] = useState("");
-  const [famille, setFam] = useState({});
+  const [adr_cli, setAdr] = useState("");
+  const [ville_cli, setVille] = useState("");
   const [loadImg, setLoadImg] = useState(false);
-  const [code_fam, setCodeFam] = useState("");
-  const artC = useSelector((state) => state.article);
-  const { article, loading, erreur } = artC;
-  const famL = useSelector((state) => state.famille);
-  const { familles } = famL;
-  const socAct = useSelector((state) => state.societe);
-  const { societeActuelle } = socAct;
+  const [tel_cli, setTel] = useState(0);
+  const [cod_tarif, setCodeTarif] = useState("");
+  const [cod_tva, setCodeTva] = useState("");
+
+  const clientC = useSelector((state) => state.client);
+  const { client, loading, erreur } = clientC;
+
   const uri = "http://192.168.1.21:5050";
-  useEffect(() => {
-    dispatch(familleListe());
-  }, []);
+  useEffect(() => {}, []);
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -54,7 +50,7 @@ const ArticleCree = () => {
     const formData = new FormData();
     formData.append("file", {
       uri: imgObj.assets[0].uri,
-      name: code_art + "." + fileType,
+      name: cod_cli + "." + fileType,
       type: `image/${fileType}`,
     });
 
@@ -77,12 +73,11 @@ const ArticleCree = () => {
   };
   const articleAjout = async () => {
     if (
-      code_art == "" ||
-      lib_art == "" ||
-      pua == 0 ||
-      puv == 0 ||
-      image == null ||
-      stock == 0
+      cod_cli == "" ||
+      nom_cli == "" ||
+      cin == 0 ||
+      cod_tva == 0 ||
+      tel_cli == 0
     ) {
       alert("Il faut remplir tous les champs!");
     } else {
@@ -90,24 +85,26 @@ const ArticleCree = () => {
         let imgServ = await handleUploadPhoto();
 
         dispatch(
-          articleCree({
-            code_art,
-            nom: lib_art,
-            prix_achat: pua,
-            prix_1: puv,
-            num_stock: stock,
-            code_bar,
+          clientCree({
+            cod_cli,
+            nom_cli,
+            cin,
+            adr_cli,
+            abrv_cli,
+            tel_cli,
+            cod_tva,
             image: imgServ,
-            famille: famille._id,
-            code_fam: famille.code_fam,
-            societe: societeActuelle._id,
-            code_soc: societeActuelle.code_soc,
+            ville_cli,
+            cod_tarif,
+            cod_tva,
+            photo_cli: imgServ,
+            societe: "65a8e394bd319d1efbd07f7f",
+            code_soc: "04",
           })
         );
 
-        if (!erreur) {
-          alert("Article Crée avec Succés!");
-          /*setCodeArt("");
+        alert("Client Crée avec Succés!");
+        /*setCodeArt("");
           setLibArt("");
           setPua(0);
           setPuv(0);
@@ -115,9 +112,6 @@ const ArticleCree = () => {
           setCodeBar("");
           setImage(null);
           setFam("");*/
-        } else {
-          alert(erreur);
-        }
       } catch (e) {
         console.log(e.message);
       }
@@ -126,65 +120,58 @@ const ArticleCree = () => {
   return (
     <KeyboardAvoidingView style={{ flex: 1, padding: 5 }}>
       <ScrollView>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            backgroundColor: "snow",
-          }}
-        >
-          <Text style={{ fontSize: 18, flex: 1 / 4, verticalAlign: "middle" }}>
-            Famille
-          </Text>
-          <Picker
-            selectedValue={famille}
-            onValueChange={(itemValue, itemIndex) => setFam(itemValue)}
-            style={{ flex: 3 / 4 }}
-          >
-            {familles &&
-              familles.map((f) => <Picker.Item label={f.lib_fam} value={f} />)}
-          </Picker>
-        </View>
         <TextInput
-          label="Code Article"
-          value={code_art}
-          onChangeText={(txt) => setCodeArt(txt)}
+          label="Code Client"
+          value={cod_cli}
+          onChangeText={(txt) => setCodeCli(txt)}
           style={style.input}
         />
 
         <TextInput
-          label="Libelle"
-          value={lib_art}
-          onChangeText={(txt) => setLibArt(txt)}
+          label="Nom"
+          value={nom_cli}
+          onChangeText={(txt) => setNomCli(txt)}
           style={style.input}
         />
         <TextInput
-          label="Prix Achat"
-          value={pua}
-          onChangeText={(txt) => setPua(txt)}
+          label="Numero identité"
+          value={cin}
+          onChangeText={(txt) => setCin(txt)}
+          keyboardType="numeric"
+          style={style.input}
+          maxLength={8}
+        />
+        <TextInput
+          label="Abreviation client"
+          value={abrv_cli}
+          onChangeText={(txt) => setAbrv(txt)}
           keyboardType="numeric"
           style={style.input}
         />
         <TextInput
-          label="Prix Vente"
-          value={puv}
-          onChangeText={(txt) => setPuv(txt)}
+          label="Numero Téléphone"
+          value={tel_cli}
+          onChangeText={(txt) => setTel(txt)}
           keyboardType="numeric"
           style={style.input}
         />
         <TextInput
-          label="Stock"
-          value={stock}
-          onChangeText={(txt) => setStock(txt)}
-          keyboardType="numeric"
+          label="Adresse"
+          value={adr_cli}
+          onChangeText={(txt) => setAdr(txt)}
           style={style.input}
         />
         <TextInput
-          label="Code Bar"
-          value={code_bar}
-          onChangeText={(txt) => setCodeBar(txt)}
+          label="Ville"
+          value={ville_cli}
+          onChangeText={(txt) => setVille(txt)}
           style={style.input}
-          keyboardType="numeric"
+        />
+        <TextInput
+          label="TVA"
+          value={cod_tva}
+          onChangeText={(txt) => setCodeTva(txt)}
+          style={style.input}
         />
         <View>
           <Button
@@ -211,7 +198,7 @@ const ArticleCree = () => {
             loading={loadImg}
             disabled={loadImg || loading}
           >
-            Ajout Article
+            Ajout Client
           </Button>
         </View>
       </ScrollView>
@@ -223,4 +210,4 @@ const style = StyleSheet.create({
     marginBottom: 5,
   },
 });
-export default ArticleCree;
+export default ClientCree;

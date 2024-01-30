@@ -21,6 +21,8 @@ const FamilleCree = () => {
   const [reseau, setReseau] = useState(false);
   const famCree = useSelector((state) => state.famille);
   const { famille, loading, erreur } = famCree;
+  const socAct = useSelector((state) => state.societe);
+  const { societeActuelle } = socAct;
   //const dbState = useSelector((state) => state.SQLiteState);
   //const { db, erreur: errDB } = famCree;
   const uri = "http://192.168.1.21:5050";
@@ -97,8 +99,8 @@ const FamilleCree = () => {
               lib_fam,
               description,
               image: imgServ,
-              societe: "65a8e394bd319d1efbd07f7f",
-              code_soc: "04",
+              societe: societeActuelle._id,
+              code_soc: societeActuelle.code_soc,
             })
           );
           db.transaction((tx) => {

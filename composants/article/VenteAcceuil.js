@@ -19,8 +19,10 @@ import { articlesListe } from "../../slices/articleSlice";
 import Article from "./Article";
 import { creerCommande } from "../../slices/commandeSlice";
 import chariotSlice, { revertChariot } from "../../slices/chariotSlice";
+import { useIsFocused } from "@react-navigation/native";
 const VenteAcceuil = () => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const [rech, setRech] = useState("");
   const artListe = useSelector((state) => state.article);
   const { articles, loading, erreur } = artListe;
@@ -28,8 +30,14 @@ const VenteAcceuil = () => {
   const { chariotListe } = chListe;
   const [artRech, setArtRech] = useState([]);
   const commCreer = useSelector((state) => state.commande);
+  const cli = useSelector((state) => state.client);
+  const { clientActuelle } = cli;
+  const socAct = useSelector((state) => state.societe);
+  const { societeActuelle } = socAct;
 
   useEffect(() => {
+    console.log("cli actuelle c ");
+    console.log(clientActuelle);
     setArtRech([]);
     if (rech.length == 0) {
       dispatch(articlesListe());
@@ -42,27 +50,32 @@ const VenteAcceuil = () => {
       );
     }
     console.log(artRech[0]);
-  }, [rech]);
+  }, [rech, clientActuelle, isFocused]);
   const commandeHandler = () => {
-    dispatch(
-      creerCommande({
-        chariotListe,
-        nom_soc: "STE AMB",
-        code_soc: "04",
-        societe: "65a8e394bd319d1efbd07f7f",
-        articlesPrix: chariotListe
-          ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
-          .toFixed(3),
-        totalePrix: chariotListe
-          ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
-          .toFixed(3),
-      })
-    );
-    if (commCreer.succes == true) {
+    if (Object.keys(clientActuelle).length != 0) {
+      dispatch(
+        creerCommande({
+          chariotListe,
+          nom_soc: societeActuelle.nom_soc,
+          code_soc: societeActuelle.code_soc,
+          societe: societeActuelle._id,
+          articlesPrix: chariotListe
+            ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
+            .toFixed(3),
+          totalePrix: chariotListe
+            ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
+            .toFixed(3),
+          date_livraison: new Date(),
+          client: clientActuelle._id,
+          cod_cli: clientActuelle.cod_cli,
+          nom_cli: clientActuelle.nom_cli,
+        })
+      );
+
       alert("Commande Crée avec succés!");
       dispatch(revertChariot());
     } else {
-      alert(commCreer.erreur);
+      alert("Il faut Choisir Un Client!");
     }
   };
   return (
@@ -74,17 +87,38 @@ const VenteAcceuil = () => {
             height: "100%",
             alignItems: "center",
             justifyContent: "center",
+            display: "flex",
+            flexDirection: "row",
           }}
           disabled={chariotListe?.length == 0}
           onPress={commandeHandler}
         >
-          <Text style={style.cmdText}>Charger</Text>
-          <Text style={style.cmdText}>
-            {chariotListe
-              ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
-              .toFixed(3)}
-            DT
-          </Text>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1 / 2,
+            }}
+          >
+            <Text style={style.cmdText}>
+              Charger:
+              {chariotListe
+                ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
+                .toFixed(3)}
+              DT
+            </Text>
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1 / 2,
+            }}
+          >
+            {clientActuelle && (
+              <Text style={style.cmdText}>Client:{clientActuelle.nom_cli}</Text>
+            )}
+          </View>
         </TouchableOpacity>
       </View>
       <View style={style.blockRech}>

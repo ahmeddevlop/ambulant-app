@@ -29,11 +29,19 @@ import {
   faTractor,
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../slices/societeSlice";
 const DrawerNav = ({ navigation }) => {
+  const dispatch = useDispatch();
   let Drawer = createDrawerNavigator();
   const chListe = useSelector((state) => state.chariot);
   const { chariotListe } = chListe;
+  const socAct = useSelector((state) => state.societe);
+  const { societeActuelle } = socAct;
+  const deconnexion = () => {
+    dispatch(logout());
+    navigation.navigate("SocieteLogin");
+  };
   function CustomDrawerContent(props) {
     return (
       <DrawerContentScrollView {...props}>
@@ -56,6 +64,24 @@ const DrawerNav = ({ navigation }) => {
             Bonjour mr Bienvenue Dans Application ambulant
           </Text>
         </View>
+        {societeActuelle && (
+          <TouchableOpacity
+            onPress={() => deconnexion()}
+            style={{ padding: 10, backgroundColor: "red" }}
+          >
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "bold",
+                color: "snow",
+                alignSelf: "center",
+                verticalAlign: "middle",
+              }}
+            >
+              Deconnexion
+            </Text>
+          </TouchableOpacity>
+        )}
 
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
@@ -96,6 +122,7 @@ const DrawerNav = ({ navigation }) => {
                   alignContent: "center",
                   justifyContent: "center",
                 }}
+                onPress={() => navigation.navigate("ClientEspace")}
               >
                 <FontAwesomeIcon
                   size={20}
@@ -130,7 +157,7 @@ const DrawerNav = ({ navigation }) => {
           headerTitle: "Recu",
           headerStyle: { backgroundColor: "#f57542" },
           headerTintColor: "white",
-          headerRight: () => (
+          /*headerRight: () => (
             <View style={{ display: "flex", flexDirection: "row" }}>
               <TouchableOpacity style={{ marginRight: 20 }}>
                 <FontAwesomeIcon
@@ -147,7 +174,7 @@ const DrawerNav = ({ navigation }) => {
                 />
               </TouchableOpacity>
             </View>
-          ),
+          )*/
         }}
       />
       <Drawer.Screen
@@ -160,7 +187,7 @@ const DrawerNav = ({ navigation }) => {
           headerTitle: "Article",
           headerStyle: { backgroundColor: "#f57542" },
           headerTintColor: "white",
-          headerRight: () => (
+          /*headerRight: () => (
             <View style={{ display: "flex", flexDirection: "row" }}>
               <TouchableOpacity style={{ marginRight: 20 }}>
                 <FontAwesomeIcon
@@ -177,7 +204,7 @@ const DrawerNav = ({ navigation }) => {
                 />
               </TouchableOpacity>
             </View>
-          ),
+          )*/
         }}
       />
     </Drawer.Navigator>

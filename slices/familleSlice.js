@@ -1,10 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "redaxios";
+import store from "../store";
 const uri = "http://192.168.1.21:5050";
 
 export const familleListe = createAsyncThunk("familleListe", async () => {
   //Cas en ligne
-  const { data } = await axios.get(`${uri}/api/familles/04`);
+  const {
+    societe: { societeActuelle },
+  } = store.getState();
+  const { data } = await axios.get(
+    `${uri}/api/familles/${societeActuelle.code_soc}`
+  );
   return data;
 });
 export const familleCree = createAsyncThunk("familleCree", async (famille) => {

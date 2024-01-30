@@ -5,6 +5,8 @@ import articleReducer from "./slices/articleSlice";
 import SQliteReducer from "./slices/sqliteSlice";
 import chariotReducer from "./slices/chariotSlice";
 import commandeReducer from "./slices/commandeSlice";
+import clientReducer from "./slices/clientSlice";
+import societeReducer from "./slices/societeSlice";
 const store = configureStore({
   reducer: {
     famille: familleReducer,
@@ -12,6 +14,8 @@ const store = configureStore({
     SQLiteState: SQliteReducer,
     chariot: chariotReducer,
     commande: commandeReducer,
+    client: clientReducer,
+    societe: societeReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

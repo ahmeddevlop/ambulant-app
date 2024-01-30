@@ -9,30 +9,36 @@ const ChariotMain = () => {
   const { chariotListe } = chListe;
   const commCreer = useSelector((state) => state.commande);
   const url = "https://gestpro.globalsystempro.com";
-
+  const cli = useSelector((state) => state.client);
+  const { clientActuelle } = cli;
   useEffect(() => {
     console.log(chariotListe);
   }, []);
   const commandeHandler = () => {
-    dispatch(
-      creerCommande({
-        chariotListe,
-        nom_soc: "STE AMB",
-        code_soc: "04",
-        societe: "65a8e394bd319d1efbd07f7f",
-        articlesPrix: chariotListe
-          ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
-          .toFixed(3),
-        totalePrix: chariotListe
-          ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
-          .toFixed(3),
-      })
-    );
-    if (commCreer.succes == true) {
+    if (Object.keys(clientActuelle).length != 0) {
+      dispatch(
+        creerCommande({
+          chariotListe,
+          nom_soc: "STE AMB",
+          code_soc: "04",
+          societe: "65a8e394bd319d1efbd07f7f",
+          articlesPrix: chariotListe
+            ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
+            .toFixed(3),
+          totalePrix: chariotListe
+            ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
+            .toFixed(3),
+          date_livraison: new Date(),
+          client: clientActuelle._id,
+          cod_cli: clientActuelle.cod_cli,
+          nom_cli: clientActuelle.nom_cli,
+        })
+      );
+
       alert("Commande Crée avec succés!");
       dispatch(revertChariot());
     } else {
-      alert(commCreer.erreur);
+      alert("Il faut Choisir Un Client!");
     }
   };
   return (
