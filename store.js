@@ -7,6 +7,8 @@ import chariotReducer from "./slices/chariotSlice";
 import commandeReducer from "./slices/commandeSlice";
 import clientReducer from "./slices/clientSlice";
 import societeReducer from "./slices/societeSlice";
+import fournisseurReducer from "./slices/fournisseurSlice";
+import achatReducer from "./slices/achatSlice";
 const store = configureStore({
   reducer: {
     famille: familleReducer,
@@ -16,6 +18,8 @@ const store = configureStore({
     commande: commandeReducer,
     client: clientReducer,
     societe: societeReducer,
+    fournisseur: fournisseurReducer,
+    achat: achatReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

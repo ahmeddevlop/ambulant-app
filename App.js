@@ -5,12 +5,15 @@ import { Provider } from "react-redux";
 import store from "./store";
 //c'est pour dir q'on va travaillé avec navigation entre les ecrans
 import MainNavigator from "./navigation/MainNavigator";
+import { PaperProvider } from "react-native-paper";
 const App = () => {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <MainNavigator />
-      </NavigationContainer>
+      <PaperProvider>
+        <NavigationContainer>
+          <MainNavigator />
+        </NavigationContainer>
+      </PaperProvider>
     </Provider>
   );
 };

@@ -188,6 +188,8 @@ const style = StyleSheet.create({
     marginBottom: 10,
     padding: 15,
     justifyContent: "space-between",
+    borderWidth: 0.5,
+    borderColor: "green",
   },
   text: {
     fontSize: 18,

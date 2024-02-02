@@ -13,6 +13,7 @@ import {
   Button,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Image,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
@@ -22,15 +23,18 @@ import {
   faListDots,
   faListUl,
   faNoteSticky,
+  faPencil,
   faPerson,
   faPersonArrowDownToLine,
   faPersonCirclePlus,
   faReceipt,
+  faStoreAlt,
   faTractor,
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../slices/societeSlice";
+import AchatStack from "./AchatStack";
 const DrawerNav = ({ navigation }) => {
   const dispatch = useDispatch();
   let Drawer = createDrawerNavigator();
@@ -38,6 +42,7 @@ const DrawerNav = ({ navigation }) => {
   const { chariotListe } = chListe;
   const socAct = useSelector((state) => state.societe);
   const { societeActuelle } = socAct;
+  const url = "https://gestpro.globalsystempro.com";
   const deconnexion = () => {
     dispatch(logout());
     navigation.navigate("SocieteLogin");
@@ -47,12 +52,21 @@ const DrawerNav = ({ navigation }) => {
       <DrawerContentScrollView {...props}>
         <View
           style={{
-            backgroundColor: "green",
-            height: 100,
+            backgroundColor: "#f57542",
+            height: 200,
             alignItems: "center",
             justifyContent: "center",
           }}
         >
+          <Image
+            source={{ uri: url + societeActuelle.logo_soc }}
+            style={{
+              width: "50%",
+              height: "50%",
+              resizeMode: "contain",
+              margin: 5,
+            }}
+          />
           <Text
             style={{
               fontSize: 15,
@@ -61,7 +75,7 @@ const DrawerNav = ({ navigation }) => {
               color: "snow",
             }}
           >
-            Bonjour mr Bienvenue Dans Application ambulant
+            Société:{societeActuelle.nom_soc}
           </Text>
         </View>
         {societeActuelle && (
@@ -205,6 +219,18 @@ const DrawerNav = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           )*/
+        }}
+      />
+      <Drawer.Screen
+        name="AchatStack"
+        component={AchatStack}
+        options={{
+          drawerIcon: () => <FontAwesomeIcon size={20} icon={faStoreAlt} />,
+          drawerLabel: "Achats",
+          //drawerLabelStyle: { color: "snow" },
+          headerTitle: "Achats",
+          headerStyle: { backgroundColor: "#f57542" },
+          headerTintColor: "white",
         }}
       />
     </Drawer.Navigator>

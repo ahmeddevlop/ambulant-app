@@ -25,6 +25,7 @@
     "expo": "~50.0.3",
     "expo-asset": "~9.0.2",
     "expo-file-system": "16.0.5",
+    "expo-font": "~11.10.2",
     "expo-image-picker": "~14.7.1",
     "expo-print": "~12.8.1",
     "expo-sharing": "~11.10.0",
