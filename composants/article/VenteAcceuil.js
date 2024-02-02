@@ -20,6 +20,8 @@ import Article from "./Article";
 import { creerCommande } from "../../slices/commandeSlice";
 import chariotSlice, { revertChariot } from "../../slices/chariotSlice";
 import { useIsFocused } from "@react-navigation/native";
+import * as Print from "expo-print";
+import { shareAsync } from "expo-sharing";
 const VenteAcceuil = () => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
@@ -34,7 +36,91 @@ const VenteAcceuil = () => {
   const { clientActuelle } = cli;
   const socAct = useSelector((state) => state.societe);
   const { societeActuelle } = socAct;
+  const lien = "https://gestpro.globalsystempro.com";
+  const createPDF = async () => {
+    const html = `
+    <html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    
+    </head>
+    <body>
+    <div style=" display:'flex',flexDirection:'column'">
+      <h1>Nom Société:${societeActuelle.nom_soc}</h1>
+      <h1>Code Société:${societeActuelle.code_soc}</h1>
+      <h1>Nom Client:${clientActuelle.nom_cli}</h1>
+      <h1>Code Client:${clientActuelle.cod_cli}</h1>
+    </div>
+    <div style=" display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1 ">
+        <div style=" flex: 1 / 5; background-color: #fff;flex-direction:row;flex-wrap:wrap ">
+    
+          <div style="flex:1/5;">
+      <h1>Articles Commandée</h1>
+       ${chariotListe.map(
+         (item, i) => `
+        <div style="display:flex;flex-direction:row;">
+         <img style="
+                    width: 140;
+                    height: 120;
+                    border-radius: 25;
+                    margin-left: 3;
+                    flex: 1/4;"
+                  }} src=${lien + item.image}></img>
+                  <div style=" backgroud-color: #fff; flex: 1/4 ;">
+                <h1
+                  style="
+                    margin-left: 0;
+                    margin-top: 15;
+                    width: 130;
+                    color: rgb(0,120,212);
+                  "
+                >
+                  ${item.nom}
+                </h1>
+              </div>
+              <div style=" backgroud-color: #fff; flex: 0.5; ">
+                <h1
+                  style="
+                    margin-left: 70;
+                    margin-top: 15;
+                  "
+                >
+                  ${item.qty}
+                </h1>
+                </div>
+              <div style=" backgroud-color: #fff; flex: 1; ">
+                <h1
+                  style="
+                    margin-left: 80;
+                    margin-top: 15;
+                  "
+                >
+                  ${(item.prix * item.qty).toFixed(3)} DT
+                </h1>
+              </div>
+              
+                </div>`
+       )}
+      </div>
+      <div style=" display:'flex',flexDirection:'column'">
+      <h1>Prix Totale:${chariotListe
+        .reduce((acc, i) => acc + i.prix * i.qty, 0)
+        .toFixed(3)}DT</h1>
+    </div>
 
+        </div>
+      </body>
+      </html>`;
+
+    const { uri } = await Print.printToFileAsync({
+      html,
+    });
+    console.log("File has been saved to:", uri);
+
+    await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
+  };
   useEffect(() => {
     console.log("cli actuelle c ");
     console.log(clientActuelle);
@@ -60,10 +146,10 @@ const VenteAcceuil = () => {
           code_soc: societeActuelle.code_soc,
           societe: societeActuelle._id,
           articlesPrix: chariotListe
-            ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
+            ?.reduce((acc, i) => acc + i.prix_achat * i.qty, 0)
             .toFixed(3),
           totalePrix: chariotListe
-            ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
+            ?.reduce((acc, i) => acc + i.prix_achat * i.qty, 0)
             .toFixed(3),
           date_livraison: new Date(),
           client: clientActuelle._id,
@@ -73,6 +159,7 @@ const VenteAcceuil = () => {
       );
 
       alert("Commande Crée avec succés!");
+      createPDF();
       dispatch(revertChariot());
     } else {
       alert("Il faut Choisir Un Client!");
@@ -103,7 +190,7 @@ const VenteAcceuil = () => {
             <Text style={style.cmdText}>
               Charger:
               {chariotListe
-                ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
+                ?.reduce((acc, i) => acc + i.prix_achat * i.qty, 0)
                 .toFixed(3)}
               DT
             </Text>

@@ -87,7 +87,7 @@ const SocieteInsc = (props) => {
 
     dispatch(
       societeCreeAction({
-        code_soc: cod_soc,
+        code_soc: tel_soc,
         nom_soc,
         adr_soc,
         mdp_soc,
@@ -154,12 +154,12 @@ const SocieteInsc = (props) => {
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={(cod_soc) => setCodSoc(cod_soc)}
+              onChangeText={(tel_soc) => setTel(tel_soc)}
               underlineColorAndroid="#f000"
-              placeholder="Code Société"
+              placeholder="Numéro téléphone"
               placeholderTextColor="snow"
-              autoCapitalize="sentences"
               returnKeyType="next"
+              keyboardType="numeric"
               blurOnSubmit={false}
             />
           </View>
@@ -185,18 +185,7 @@ const SocieteInsc = (props) => {
               blurOnSubmit={false}
             />
           </View>
-          <View style={styles.SectionStyle}>
-            <TextInput
-              style={styles.inputStyle}
-              onChangeText={(tel_soc) => setTel(nom_soc)}
-              underlineColorAndroid="#f000"
-              placeholder="Numéro téléphone"
-              placeholderTextColor="snow"
-              returnKeyType="next"
-              keyboardType="numeric"
-              blurOnSubmit={false}
-            />
-          </View>
+
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}

@@ -3,14 +3,14 @@ import axios from "redaxios";
 const uri = "http://192.168.1.21:5050";
 export const ajoutChariot = createAsyncThunk(
   "ajoutChariot",
-  ({ article, qte }) => {
-    console.log("qte:", qte);
+  ({ article, qte, prix }) => {
+    console.log("prix:", prix);
     return {
       article: article._id,
       nom: article.nom,
       image: article.image,
       prix: article.prix_1,
-      prix_achat: article.prix_achat,
+      prix_achat: prix,
       num_stock: article.num_stock,
       qty: qte,
     };
