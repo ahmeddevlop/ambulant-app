@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
-const Famille = ({ famille, reseau }) => {
+const Famille = ({ famille, reseau, navigation }) => {
   const url = reseau ? "https://gestpro.globalsystempro.com" : "";
   return (
-    <View style={style.main}>
+    <TouchableOpacity
+      style={style.main}
+      onPress={() =>
+        navigation.navigate("FamilleMiseAJour", { famille: famille })
+      }
+    >
       <Image
         style={{ height: 50, width: 50 }}
         source={{ uri: url + famille?.image }}
       />
       <Text style={style.text}>{famille.lib_fam}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 const style = StyleSheet.create({

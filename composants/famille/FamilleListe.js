@@ -179,7 +179,12 @@ const FamilleListe = ({ navigation }) => {
         <ScrollView>
           {reseau
             ? familles.map((f, i) => (
-                <Famille famille={f} index={i} reseau={true} />
+                <Famille
+                  famille={f}
+                  index={i}
+                  reseau={true}
+                  navigation={navigation}
+                />
               ))
             : famLoc.map((f, i) => (
                 <Famille famille={f} index={i} reseau={false} />

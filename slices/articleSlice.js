@@ -18,6 +18,19 @@ export const articleCree = createAsyncThunk("articleCree", async (article) => {
   const { data } = await axios.post(`${uri}/api/articles/nv`, article, config);
   return data;
 });
+export const articleMajAction = createAsyncThunk(
+  "articleMaj",
+  async (article) => {
+    console.log(article);
+    const config = { headers: { "Content-type": "Application/json" } };
+    const { data } = await axios.put(
+      `${uri}/api/articles/${article._id}`,
+      article,
+      config
+    );
+    return data;
+  }
+);
 const articleSlice = createSlice({
   name: "article",
   initialState: {
@@ -43,6 +56,15 @@ const articleSlice = createSlice({
       (state.loading = false), (state.article = action.payload);
     });
     builder.addCase(articleCree.rejected, (state, action) => {
+      (state.loading = false), (state.erreur = action.payload);
+    });
+    builder.addCase(articleMajAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(articleMajAction.fulfilled, (state, action) => {
+      (state.loading = false), (state.article = action.payload);
+    });
+    builder.addCase(articleMajAction.rejected, (state, action) => {
       (state.loading = false), (state.erreur = action.payload);
     });
   },

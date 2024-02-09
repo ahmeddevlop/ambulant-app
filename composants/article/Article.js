@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Modal, TextInput } from "react-native-paper";
 import { ajoutChariot } from "../../slices/chariotSlice";
 import { useDispatch, useSelector } from "react-redux";
-const Article = ({ article, source }) => {
+const Article = ({ article, source, navigation }) => {
   const dispatch = useDispatch();
   const url = "https://gestpro.globalsystempro.com";
   const chListe = useSelector((state) => state.chariot);
@@ -31,7 +31,14 @@ const Article = ({ article, source }) => {
   return (
     <View style={{ flex: 1, height: "auto", justifyContent: "space-between" }}>
       {source == "consult" ? (
-        <View style={style.main}>
+        <TouchableOpacity
+          style={style.main}
+          onPress={() =>
+            navigation.navigate("ArticleMiseAJour", {
+              article: article,
+            })
+          }
+        >
           <Image
             style={{
               height: 50,
@@ -54,16 +61,7 @@ const Article = ({ article, source }) => {
             >
               Stock:{article.num_stock}
             </Text>
-            <Text
-              style={{
-                fontSize: 15,
-                marginLeft: 5,
-                //alignSelf: "center",
-                verticalAlign: "middle",
-              }}
-            >
-              PU:{Number(article.prix_1).toFixed(3)}
-            </Text>
+
             {/*Block Quantité */}
 
             {/* Fin Block quantité */}
@@ -71,7 +69,7 @@ const Article = ({ article, source }) => {
           <Text style={{ verticalAlign: "middle", flex: 1.5 / 7 }}>
             {Number(article.prix_1).toFixed(3)}DT
           </Text>
-        </View>
+        </TouchableOpacity>
       ) : (
         <View style={style.main}>
           <TouchableOpacity

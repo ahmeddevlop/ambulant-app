@@ -76,13 +76,15 @@ const ArticleCree = () => {
     }
   };
   const articleAjout = async () => {
+    console.log(famille);
     if (
       code_art == "" ||
       lib_art == "" ||
       pua == 0 ||
       puv == 0 ||
       image == null ||
-      stock == 0
+      stock == 0 ||
+      Object.keys(famille).length == 0
     ) {
       alert("Il faut remplir tous les champs!");
     } else {
@@ -141,6 +143,7 @@ const ArticleCree = () => {
             onValueChange={(itemValue, itemIndex) => setFam(itemValue)}
             style={{ flex: 3 / 4 }}
           >
+            <Picker.Item label="Choisir une Famille SVP" value={null} />
             {familles &&
               familles.map((f) => <Picker.Item label={f.lib_fam} value={f} />)}
           </Picker>

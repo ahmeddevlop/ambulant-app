@@ -27,7 +27,7 @@ const Commande = ({ commande, index, navigation }) => {
     >
       <Text style={style.text}>{commande.date_livraison.substring(0, 10)}</Text>
 
-      <Text style={style.text}>{commande.nom_soc}</Text>
+      <Text style={style.text}>{commande.nom_cli}</Text>
       <Text style={style.text}>{Number(commande.totalePrix).toFixed(3)}DT</Text>
     </TouchableOpacity>
   );

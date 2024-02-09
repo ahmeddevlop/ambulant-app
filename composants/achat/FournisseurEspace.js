@@ -33,14 +33,15 @@ const FournisseurEspace = ({ navigation }) => {
 
   const [frnRech, setFrnRech] = useState([]);
   const [visible, setVisible] = React.useState(false);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
   const containerStyle = {
     backgroundColor: "white",
     padding: 20,
     width: "90%",
     alignSelf: "center",
   };
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
   const ajoutFrn = () => {
     dispatch(
       fournisseurCree({

@@ -19,7 +19,19 @@ export const familleCree = createAsyncThunk("familleCree", async (famille) => {
   const { data } = await axios.post(`${uri}/api/familles`, famille, config);
   return data;
 });
+export const familleUpdateAction = createAsyncThunk(
+  "familleUpdateAction",
+  async (famille) => {
+    const config = { headers: { "Content-type": "Application/json" } };
 
+    const { data } = await axios.put(
+      `${uri}/api/familles/${famille._id}`,
+      famille,
+      config
+    );
+    return data;
+  }
+);
 const familleSlice = createSlice({
   name: "familleListe",
   initialState: {
@@ -45,6 +57,15 @@ const familleSlice = createSlice({
       (state.famille = action.payload), (state.loading = false);
     });
     builder.addCase(familleCree.rejected, (state, action) => {
+      (state.loading = false), (state.erreur = action.payload);
+    });
+    builder.addCase(familleUpdateAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(familleUpdateAction.fulfilled, (state, action) => {
+      (state.famille = action.payload), (state.loading = false);
+    });
+    builder.addCase(familleUpdateAction.rejected, (state, action) => {
       (state.loading = false), (state.erreur = action.payload);
     });
   },

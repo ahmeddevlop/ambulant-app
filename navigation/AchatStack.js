@@ -29,10 +29,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ChariotMain from "../composants/commande/ChariotMain";
 import FournisseurEspace from "../composants/achat/FournisseurEspace";
+import { Modal, Portal } from "react-native-paper";
+import { useState } from "react";
 const AchatStack = ({ navigation }) => {
   const Stack = createNativeStackNavigator();
   const ch = useSelector((state) => state.chariot);
   const { chariotListe } = ch;
+  const [visible, setVisible] = useState(false);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -81,12 +88,14 @@ const AchatStack = ({ navigation }) => {
                   icon={faPersonCirclePlus}
                 />
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={{
                   marginRight: 20,
                   alignContent: "center",
                   justifyContent: "center",
                 }}
+                onPress={() => showModal()}
               >
                 <FontAwesomeIcon
                   size={20}
@@ -94,6 +103,20 @@ const AchatStack = ({ navigation }) => {
                   icon={faEllipsisVertical}
                 />
               </TouchableOpacity>
+
+              <Modal
+                style={{ backgroundColor: "snow", height: 300 }}
+                visible={visible}
+                onDismiss={hideModal}
+              >
+                <View style={{ backgroundColor: "snow", marginTop: 20 }}>
+                  <Text>menu</Text>
+                  <Text>menu</Text>
+                  <Text>menu</Text>
+                  <Text>menu</Text>
+                  <Text>menu</Text>
+                </View>
+              </Modal>
             </View>
           ),
         }}

@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { creerCommande } from "../../slices/commandeSlice";
 import { revertChariot } from "../../slices/chariotSlice";
+import * as Print from "expo-print";
+import { shareAsync } from "expo-sharing";
 const ChariotMain = () => {
   const dispatch = useDispatch();
   const chListe = useSelector((state) => state.chariot);
@@ -11,22 +13,114 @@ const ChariotMain = () => {
   const url = "https://gestpro.globalsystempro.com";
   const cli = useSelector((state) => state.client);
   const { clientActuelle } = cli;
+  const socAct = useSelector((state) => state.societe);
+  const { societeActuelle } = socAct;
   useEffect(() => {
     console.log(chariotListe);
   }, []);
+  const createPDF = async () => {
+    const html = `
+    <html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    
+    </head>
+    <body style="padding:10">
+    <div style="display:flex;flex-direction:row;justify-content:space-between;">
+    
+      <h1 style="font-size:35;font-weight:bold;">Société:${
+        societeActuelle.nom_soc
+      }</h1>
+   
+    <div style=" display:flex;flex-direction:column;">      
+      <h1 style="font-size:35;font-weight:bold;">Nom Client:${
+        clientActuelle.nom_cli
+      }</h1>
+      <h1 style="font-size:35;font-weight:bold;">Code Client:${
+        clientActuelle.cod_cli
+      }</h1>
+      <h1 style="font-size:35;font-weight:bold;">Date Livraison:${new Date().getDate()}/${
+      new Date().getMonth() + 1
+    }/${new Date().getFullYear()}</h1>
+    </div>
+    </div>
+    <div style=" display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1 ">
+        <div style=" flex: 1 / 5; background-color: #fff;flex-direction:row;flex-wrap:wrap ">
+    
+          <div style="flex:1/5;">
+      <h1>Articles Commandée</h1>
+       ${chariotListe.map(
+         (item, i) => `
+        <div style="display:flex;flex-direction:row;">
+         
+                  <div style=" backgroud-color: #fff; flex: 1/4 ;">
+                <h1
+                  style="
+                    margin-left: 0;
+                    margin-top: 15;
+                    width: 130;
+                    color: rgb(0,120,212);font-size:30;font-weight:bold;
+                  "
+                >
+                  ${item.nom}
+                </h1>
+              </div>
+              <div style=" backgroud-color: #fff; flex: 0.5; ">
+                <h1
+                  style="
+                    margin-left: 70;
+                    margin-top: 15;font-size:30;font-weight:bold;
+                  "
+                >
+                  ${item.qty}
+                </h1>
+                </div>
+              <div style=" backgroud-color: #fff; flex: 1; ">
+                <h1
+                  style="
+                    margin-left: 80;
+                    margin-top: 15;font-size:30;font-weight:bold;
+                  "
+                >
+                  ${(item.prix * item.qty).toFixed(3)} DT
+                </h1>
+              </div>
+              
+                </div>`
+       )}
+      </div>
+  
+      <h1 style="font-size:35;font-weight:bold;justify-self:end;padding:10;">Prix Totale:${chariotListe
+        .reduce((acc, i) => acc + i.prix * i.qty, 0)
+        .toFixed(3)}DT</h1>
+ 
+
+        </div>
+      </body>
+      </html>`;
+
+    const { uri } = await Print.printToFileAsync({
+      html,
+    });
+    console.log("File has been saved to:", uri);
+
+    await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
+  };
   const commandeHandler = () => {
     if (Object.keys(clientActuelle).length != 0) {
       dispatch(
         creerCommande({
           chariotListe,
-          nom_soc: "STE AMB",
-          code_soc: "04",
-          societe: "65a8e394bd319d1efbd07f7f",
+          nom_soc: societeActuelle.nom_soc,
+          code_soc: societeActuelle.code_soc,
+          societe: societeActuelle._id,
           articlesPrix: chariotListe
-            ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
+            ?.reduce((acc, i) => acc + i.prix_achat * i.qty, 0)
             .toFixed(3),
           totalePrix: chariotListe
-            ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
+            ?.reduce((acc, i) => acc + i.prix_achat * i.qty, 0)
             .toFixed(3),
           date_livraison: new Date(),
           client: clientActuelle._id,
@@ -36,6 +130,7 @@ const ChariotMain = () => {
       );
 
       alert("Commande Crée avec succés!");
+      createPDF();
       dispatch(revertChariot());
     } else {
       alert("Il faut Choisir Un Client!");
@@ -91,17 +186,38 @@ const ChariotMain = () => {
             height: "100%",
             alignItems: "center",
             justifyContent: "center",
+            display: "flex",
+            flexDirection: "row",
           }}
           disabled={chariotListe?.length == 0}
           onPress={commandeHandler}
         >
-          <Text style={style.cmdText}>Charger</Text>
-          <Text style={style.cmdText}>
-            {chariotListe
-              ?.reduce((acc, i) => acc + i.prix * i.qty, 0)
-              .toFixed(3)}
-            DT
-          </Text>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1 / 2,
+            }}
+          >
+            <Text style={style.cmdText}>
+              Charger:
+              {chariotListe
+                ?.reduce((acc, i) => acc + i.prix_achat * i.qty, 0)
+                .toFixed(3)}
+              DT
+            </Text>
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1 / 2,
+            }}
+          >
+            {clientActuelle && (
+              <Text style={style.cmdText}>Client:{clientActuelle.nom_cli}</Text>
+            )}
+          </View>
         </TouchableOpacity>
       </View>
     </View>

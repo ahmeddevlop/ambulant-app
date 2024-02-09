@@ -31,10 +31,12 @@ import {
   faStoreAlt,
   faTractor,
   faTruck,
+  faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../slices/societeSlice";
 import AchatStack from "./AchatStack";
+import StockStack from "./StockStack";
 const DrawerNav = ({ navigation }) => {
   const dispatch = useDispatch();
   let Drawer = createDrawerNavigator();
@@ -195,7 +197,7 @@ const DrawerNav = ({ navigation }) => {
         name="ArticleStack"
         component={ArticleStack}
         options={{
-          drawerIcon: () => <FontAwesomeIcon size={20} icon={faDatabase} />,
+          drawerIcon: () => <FontAwesomeIcon size={20} icon={faListUl} />,
           drawerLabel: "Articles",
           //drawerLabelStyle: { color: "snow" },
           headerTitle: "Article",
@@ -225,10 +227,22 @@ const DrawerNav = ({ navigation }) => {
         name="AchatStack"
         component={AchatStack}
         options={{
-          drawerIcon: () => <FontAwesomeIcon size={20} icon={faStoreAlt} />,
+          drawerIcon: () => <FontAwesomeIcon size={20} icon={faTruck} />,
           drawerLabel: "Achats",
           //drawerLabelStyle: { color: "snow" },
           headerTitle: "Achats",
+          headerStyle: { backgroundColor: "#f57542" },
+          headerTintColor: "white",
+        }}
+      />
+      <Drawer.Screen
+        name="StockStack"
+        component={StockStack}
+        options={{
+          drawerIcon: () => <FontAwesomeIcon size={20} icon={faWarehouse} />,
+          drawerLabel: "Stock",
+          //drawerLabelStyle: { color: "snow" },
+          headerTitle: "Stock",
           headerStyle: { backgroundColor: "#f57542" },
           headerTintColor: "white",
         }}

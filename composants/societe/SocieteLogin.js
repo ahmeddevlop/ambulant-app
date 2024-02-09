@@ -35,13 +35,14 @@ const SocieteLogin = (props) => {
 
   const handleSubmitButton = async () => {
     setErrortext("");
-
+    alert("ain draham");
     dispatch(
       societeAuth({
         mdp_soc,
         tel_soc,
       })
     );
+
     console.log(erreur);
     if (erreur != "") {
       alert(erreur);
