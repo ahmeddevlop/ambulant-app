@@ -17,7 +17,8 @@ const FamilleListe = ({ navigation }) => {
   const [reseau, setReseau] = useState(false);
   const [famUpdate, setFamUpdate] = useState([]);
   const [synchLoad, setSycnhLoad] = useState(false);
-  const uri = "http://192.168.1.21:5050";
+  //const uri = "http://192.168.1.21:5050";
+  const uri = "https://gestpro.globalsystempro.com/back_3";
   const createFormData = (fam) => {
     console.log(fam);
     const fileName = fam.image.split("/").pop();

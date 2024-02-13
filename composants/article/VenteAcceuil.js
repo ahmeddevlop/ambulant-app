@@ -13,7 +13,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native-gesture-handler";
-import { Searchbar } from "react-native-paper";
+import { Portal, Searchbar } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { articlesListe } from "../../slices/articleSlice";
 import Article from "./Article";
@@ -22,7 +22,9 @@ import chariotSlice, { revertChariot } from "../../slices/chariotSlice";
 import { useIsFocused } from "@react-navigation/native";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
-const VenteAcceuil = () => {
+import { useFonts } from "expo-font";
+
+const VenteAcceuil = ({ navigation }) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const [rech, setRech] = useState("");
@@ -37,6 +39,7 @@ const VenteAcceuil = () => {
   const socAct = useSelector((state) => state.societe);
   const { societeActuelle } = socAct;
   const lien = "https://gestpro.globalsystempro.com";
+
   const createPDF = async () => {
     const html = `
     <html>
@@ -176,7 +179,8 @@ const VenteAcceuil = () => {
       <View style={style.blockCmd}>
         <TouchableOpacity
           style={{
-            backgroundColor: chariotListe.length != 0 ? "#16ab36" : "#77f788",
+            //backgroundColor: "red",
+            backgroundColor: chariotListe.length != 0 ? "#2FB641" : "#04bfd4",
             height: "100%",
             alignItems: "center",
             justifyContent: "center",
@@ -227,12 +231,12 @@ const VenteAcceuil = () => {
         {rech.length != 0
           ? artRech?.map((a) => (
               <View>
-                <Article article={a} source="vente" />
+                <Article article={a} source="vente" navigation={navigation} />
               </View>
             ))
           : articles?.articles?.map((a) => (
               <View>
-                <Article article={a} source="vente" />
+                <Article article={a} source="vente" navigation={navigation} />
               </View>
             ))}
       </ScrollView>
@@ -254,8 +258,9 @@ const style = StyleSheet.create({
 
   cmdText: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "snow",
+    //fontWeight: "bold",
+    color: "#fff",
+    fontFamily: "Montserrat-SemiBold",
   },
   //Fin BlockCmd
   //Block rech

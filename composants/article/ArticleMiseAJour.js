@@ -32,7 +32,8 @@ const ArticleMiseAJour = ({ route }) => {
   const { familles } = famL;
   const socAct = useSelector((state) => state.societe);
   const { societeActuelle } = socAct;
-  const uri = "http://192.168.1.21:5050";
+  //const uri = "http://192.168.1.21:5050";
+  const uri = "https://gestpro.globalsystempro.com/back_3";
   useEffect(() => {
     dispatch(familleListe());
     console.log(art.code_bar);

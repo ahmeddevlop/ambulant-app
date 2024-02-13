@@ -25,7 +25,8 @@ const FamilleCree = () => {
   const { societeActuelle } = socAct;
   //const dbState = useSelector((state) => state.SQLiteState);
   //const { db, erreur: errDB } = famCree;
-  const uri = "http://192.168.1.21:5050";
+  //const uri = "http://192.168.1.21:5050";
+  const uri = "https://gestpro.globalsystempro.com/back_3";
   //var db = openDatabase({ name: "test.db", location: "default" });
 
   useEffect(() => {

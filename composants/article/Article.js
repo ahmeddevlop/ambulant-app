@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Modal, TextInput } from "react-native-paper";
+import { Button, FAB, Modal, Portal, TextInput } from "react-native-paper";
 import { ajoutChariot } from "../../slices/chariotSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useFonts } from "expo-font";
 const Article = ({ article, source, navigation }) => {
   const dispatch = useDispatch();
   const url = "https://gestpro.globalsystempro.com";
@@ -11,9 +12,14 @@ const Article = ({ article, source, navigation }) => {
   const { chariotListe } = chListe;
   const [qte, setQte] = useState(1);
   const [prix, setPrix] = useState(article.prix_1);
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
+  const refPrix = React.useRef();
+  const qteRef = React.useRef();
+  const showModal = () => {
+    setVisible(true);
+    refPrix?.current?.focus();
+  };
 
-  const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const ajoutChariotHandler = () => {
     console.log(qte);
@@ -74,102 +80,204 @@ const Article = ({ article, source, navigation }) => {
         <View style={style.main}>
           <TouchableOpacity
             style={{
-              flex: 1 / 5,
-              width: 70,
-              height: 70,
+              //flex: 1 / 5,
+              width: 80,
+              height: 90,
               borderRadius: 25,
               marginLeft: 3,
             }}
-            onPress={() => ajoutChariotHandler()}
+            onPress={() =>
+              navigation.navigate("ArticleMiseAJour", {
+                article: article,
+              })
+            }
           >
             <Image
               style={{
-                height: "100%",
-                width: "100%",
+                width: null,
                 borderRadius: 20,
+                flex: 1,
+                //resizeMode: "contain",
               }}
               source={{ uri: url + article?.image }}
             />
           </TouchableOpacity>
-          <View style={{ flex: 2.5 / 5, justifyContent: "space-between" }}>
-            <Text style={style.text}>{article.nom}</Text>
-            <Text
-              style={{
-                fontSize: 15,
-                marginLeft: 5,
-                //alignSelf: "center",
-                verticalAlign: "middle",
-                flex: 1.5 / 2,
-              }}
-            >
-              {"Prix de départ:" + Number(article.prix_1).toFixed(3)}
-            </Text>
-            <TextInput
-              style={{
-                fontSize: 15,
-                marginLeft: 5,
-                //alignSelf: "center",
-                verticalAlign: "middle",
-                backgroundColor: "#e6e1e1",
-                // flex: 1 / 2,
-                height: 5,
-                fontSize: 15,
-              }}
-              keyboardType="numeric"
-              label={"Prix:" + (prix == "" ? article.prix_1 : prix)}
-              value={prix}
-              onChangeText={(txt) => setPrix(txt)}
-            />
-          </View>
           <View
             style={{
-              flex: 1.5 / 5,
-              marginLeft: 5,
-              justifyContent: "space-between",
+              flex: 4 / 5,
+              //justifyContent: "space-between",
+              display: "flex",
             }}
           >
-            <Text
-              style={{
-                fontSize: 15,
-                marginLeft: 5,
-                //alignSelf: "center",
-                verticalAlign: "middle",
-              }}
-            >
-              Stock:{article.num_stock}
-            </Text>
-            <TextInput
-              style={{
-                fontSize: 15,
-                marginLeft: 5,
-                //alignSelf: "center",
-                verticalAlign: "middle",
-                backgroundColor: "#e6e1e1",
-                // flex: 1 / 2,
-                height: 5,
-                fontSize: 15,
-              }}
-              label={"Qte:" + (qte == "" ? 1 : qte)}
-              value={qte}
-              onChangeText={(txt) => setQte(txt)}
-              keyboardType="numeric"
-            />
-            <Text
-              style={{
-                verticalAlign: "middle",
-                fontWeight: "bold",
-                alignSelf: "center",
-              }}
-            >
-              {(
-                (prix == "" ? Number(article.prix_1) : prix) *
-                (qte == "" ? 1 : Number(qte))
-              ).toFixed(3)}
-              DT
-            </Text>
-          </View>
+            <Text style={style.text}>{article.nom}</Text>
+            <View>
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    marginLeft: 5,
+                    //alignSelf: "center",
+                    verticalAlign: "middle",
+                    padding: 6,
+                    color: "#0a19f0",
+                    fontFamily: "Montserrat-SemiBold",
+                  }}
+                >
+                  {/*Stock:{article.num_stock}*/}
 
-          {/*ancien design */}
+                  {"PU:" + Number(article.prix_1).toFixed(3)}
+                </Text>
+                {chariotListe.find((f) => f.article == article._id) && (
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      marginLeft: 5,
+                      //alignSelf: "center",
+                      verticalAlign: "middle",
+                      padding: 6,
+                      color: "green",
+                      fontFamily: "Montserrat-SemiBold",
+                    }}
+                  >
+                    Quantité:{qte}
+                  </Text>
+                )}
+              </View>
+
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <Text
+                  style={{
+                    verticalAlign: "middle",
+                    fontWeight: "bold",
+                    marginLeft: 5,
+                    padding: 6,
+                    color: "red",
+                    fontFamily: "Montserrat-SemiBold",
+
+                    //alignSelf: "center",
+                  }}
+                >
+                  Totale:
+                  {(
+                    (prix == "" ? Number(article.prix_1) : prix) *
+                    (qte == "" ? 1 : Number(qte))
+                  ).toFixed(3)}
+                </Text>
+                {chariotListe.find((f) => f.article == article._id) && (
+                  <Text
+                    style={{
+                      verticalAlign: "middle",
+                      fontWeight: "bold",
+                      marginLeft: 5,
+                      padding: 6,
+                      color: "green",
+                      fontFamily: "Montserrat-SemiBold",
+
+                      //alignSelf: "center",
+                    }}
+                  >
+                    Pu Vente:
+                    {prix}
+                  </Text>
+                )}
+              </View>
+            </View>
+
+            <Portal>
+              <Modal
+                visible={visible}
+                onDismiss={hideModal}
+                style={{ padding: 10 }}
+              >
+                <View style={{ backgroundColor: "snow", padding: 10 }}>
+                  <View style={{ display: "flex", flexDirection: "row" }}>
+                    <Text
+                      style={{
+                        fontSize: 30,
+                        verticalAlign: "middle",
+                        flex: 1 / 3,
+                      }}
+                    >
+                      {"Prix:"}
+                    </Text>
+                    <TextInput
+                      style={{
+                        fontSize: 30,
+                        margin: 5,
+                        alignSelf: "center",
+                        // verticalAlign: "middle",
+                        backgroundColor: "#eef7c8",
+                        width: "50%",
+                        flex: 2 / 3,
+                        //height: 12,
+                        textAlign: "center",
+                      }}
+                      ref={refPrix}
+                      keyboardType="numeric"
+                      value={prix}
+                      label={"Prix:" + (prix == "" ? article.prix_1 : prix)}
+                      onChangeText={(txt) => setPrix(txt)}
+                      onSubmitEditing={() => qteRef.current.focus()}
+                    />
+                  </View>
+                  <View style={{ display: "flex", flexDirection: "row" }}>
+                    <Text style={{ fontSize: 30, flex: 1 / 3 }}>{"Qte:"}</Text>
+                    <TextInput
+                      style={{
+                        fontSize: 30,
+                        //margin: 5,
+                        // height: 10,
+                        alignSelf: "center",
+                        verticalAlign: "middle",
+                        backgroundColor: "#eef7c8",
+                        width: "50%",
+                        flex: 2 / 3,
+                        //height: 12,
+                        textAlign: "center",
+                        // flex: 1 / 2,
+                      }}
+                      value={qte}
+                      onChangeText={(txt) => setQte(txt)}
+                      keyboardType="numeric"
+                      ref={qteRef}
+                      label={"Qte:" + (qte == "" ? 1 : qte)}
+                    />
+                  </View>
+                  <Button
+                    onPress={() => {
+                      ajoutChariotHandler();
+                      hideModal();
+                    }}
+                    style={{ backgroundColor: "orange", margin: 10 }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        verticalAlign: "middle",
+                        color: "snow",
+                      }}
+                    >
+                      Ajout
+                    </Text>
+                  </Button>
+                </View>
+              </Modal>
+            </Portal>
+            {/*ancien design */}
+          </View>
+          <FAB
+            style={{
+              position: "absolute",
+              marginLeft: 2,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "#f57542",
+            }}
+            small
+            icon="plus"
+            color="snow"
+            onPress={() => showModal()}
+          />
         </View>
       )}
     </View>
@@ -183,11 +291,12 @@ const style = StyleSheet.create({
     // justifyContent: "right",
     backgroundColor: "snow",
     height: "auto",
-    marginBottom: 10,
-    padding: 15,
-    justifyContent: "space-between",
+    marginBottom: 3,
+    padding: 10,
+    //justifyContent: "space-between",
     borderWidth: 0.5,
     borderColor: "green",
+    flex: 1,
   },
   text: {
     fontSize: 18,
@@ -195,6 +304,9 @@ const style = StyleSheet.create({
     //alignSelf: "center",
     verticalAlign: "middle",
     fontWeight: "bold",
+    color: "#07b332",
+    padding: 6,
+    fontFamily: "Montserrat-SemiBold",
   },
   libStock: {
     display: "flex",

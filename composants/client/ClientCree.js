@@ -27,7 +27,8 @@ const ClientCree = () => {
   const clientC = useSelector((state) => state.client);
   const { client, loading, erreur } = clientC;
 
-  const uri = "http://192.168.1.21:5050";
+  //const uri = "http://192.168.1.21:5050";
+  const uri = "https://gestpro.globalsystempro.com/back_3";
   useEffect(() => {}, []);
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library

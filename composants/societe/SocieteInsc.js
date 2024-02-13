@@ -38,7 +38,8 @@ const SocieteInsc = (props) => {
   const [loadImg, setLoadImg] = useState(false);
   const socCree = useSelector((state) => state.societe);
   const { loading, erreur, societeCree } = socCree;
-  let url = `http://192.168.1.21:5050`;
+  //const uri = "http://192.168.1.21:5050";
+  const uri = "https://gestpro.globalsystempro.com/back_3";
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -73,7 +74,7 @@ const SocieteInsc = (props) => {
       setLoadImg(false);
       return "/uploads/img_default.png";
     } else {
-      console.log(`${url}/api/uploadSftp`);
+      console.log(`${uri}/api/uploadSftp`);
       const config = { headers: { "Content-type": "multipart/form-data" } };
       let body = createFormData();
       const { data } = await axios.post(`${url}/api/uploadSftp`, body, config);

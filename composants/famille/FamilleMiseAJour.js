@@ -22,7 +22,8 @@ const FamilleMiseAJour = ({ route }) => {
   const { societeActuelle } = socAct;
   //const dbState = useSelector((state) => state.SQLiteState);
   //const { db, erreur: errDB } = famCree;
-  const uri = "http://192.168.1.21:5050";
+  //const uri = "http://192.168.1.21:5050";
+  const uri = "https://gestpro.globalsystempro.com/back_3";
   const url = "https://gestpro.globalsystempro.com";
   let fam = route.params.famille;
 

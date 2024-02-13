@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import axios from "redaxios";
-const uri = "http://192.168.1.21:5050";
+
+//const uri = "http://192.168.1.21:5050";
+const uri = "https://gestpro.globalsystempro.com/back_3";
 export const ajoutChariot = createAsyncThunk(
   "ajoutChariot",
   ({ article, qte, prix }) => {
@@ -17,6 +19,11 @@ export const ajoutChariot = createAsyncThunk(
   }
 );
 export const revertChariot = createAction("REVERT_ALL");
+export const SuppChariot = createAsyncThunk("SuppChariot", async (article) => {
+  console.log("action:", article);
+  return article;
+});
+
 let initialState = {
   chariotListe: [],
   total: 0,
@@ -64,6 +71,18 @@ const chariotSlice = createSlice({
     builder.addCase(revertChariot, (state) =>
       Object.assign(state, initialState)
     );
+    builder.addCase(SuppChariot.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(SuppChariot.fulfilled, (state, action) => {
+      (state.chariotListe = state.chariotListe.filter(
+        (x) => x.article !== action.payload
+      )),
+        (state.loading = false);
+    });
+    builder.addCase(SuppChariot.rejected, (state, action) => {
+      state.loading = false;
+    });
   },
 });
 export default chariotSlice.reducer;

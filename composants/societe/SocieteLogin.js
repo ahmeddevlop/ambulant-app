@@ -35,7 +35,6 @@ const SocieteLogin = (props) => {
 
   const handleSubmitButton = async () => {
     setErrortext("");
-    alert("ain draham");
     dispatch(
       societeAuth({
         mdp_soc,

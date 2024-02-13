@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import axios from "redaxios";
-const uri = "http://192.168.1.21:5050";
-
+//const uri = "http://192.168.1.21:5050";
+const uri = "https://gestpro.globalsystempro.com/back_3";
 export const societeCreeAction = createAsyncThunk(
   "societeCree",
   async (societe) => {

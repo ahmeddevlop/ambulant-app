@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { creerCommande } from "../../slices/commandeSlice";
-import { revertChariot } from "../../slices/chariotSlice";
+import { SuppChariot, revertChariot } from "../../slices/chariotSlice";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
-const ChariotMain = () => {
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+const ChariotMain = ({ navigation }) => {
   const dispatch = useDispatch();
   const chListe = useSelector((state) => state.chariot);
   const { chariotListe } = chListe;
@@ -92,7 +94,7 @@ const ChariotMain = () => {
        )}
       </div>
   
-      <h1 style="font-size:35;font-weight:bold;justify-self:end;padding:10;">Prix Totale:${chariotListe
+      <h1 style="font-size:35;font-weight:bold;justify-self:end;padding:10;">Totale:${chariotListe
         .reduce((acc, i) => acc + i.prix * i.qty, 0)
         .toFixed(3)}DT</h1>
  
@@ -132,9 +134,13 @@ const ChariotMain = () => {
       alert("Commande Crée avec succés!");
       createPDF();
       dispatch(revertChariot());
+      navigation.navigate("VenteAcceuil");
     } else {
       alert("Il faut Choisir Un Client!");
     }
+  };
+  const suppHandler = (art) => {
+    dispatch(SuppChariot(art.article));
   };
   return (
     <View style={{ flex: 1 }}>
@@ -152,14 +158,14 @@ const ChariotMain = () => {
               height: 50,
               width: 50,
               borderRadius: 25,
-              flex: 0.5 / 3,
+              flex: 0.75 / 4,
               alignSelf: "center",
             }}
             source={{ uri: url + art.image }}
           />
           <Text
             style={{
-              flex: 1 / 3,
+              flex: 2 / 4,
               fontSize: 18,
               verticalAlign: "middle",
               marginLeft: 5,
@@ -175,8 +181,23 @@ const ChariotMain = () => {
               marginLeft: 5,
             }}
           >
-            {Number(art.prix).toFixed(3)}DT
+            {Number(art.prix_achat).toFixed(3)}DT
           </Text>
+          <TouchableOpacity
+            style={{
+              justifyContent: "center",
+              backgroundColor: "red",
+              flex: 0.5 / 4,
+            }}
+            onPress={() => suppHandler(art)}
+          >
+            <FontAwesomeIcon
+              size={18}
+              icon={faTrashCan}
+              color="snow"
+              style={{ alignSelf: "center" }}
+            />
+          </TouchableOpacity>
         </View>
       ))}
       <View style={style.blockCmd}>
