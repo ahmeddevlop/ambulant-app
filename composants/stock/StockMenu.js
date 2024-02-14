@@ -48,7 +48,7 @@ const StockMenu = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={style.zone}
-        onPress={() => navigation.navigate("FamilleListe")}
+        onPress={() => navigation.navigate("StockArticle")}
       >
         <FontAwesomeIcon
           icon={faList}

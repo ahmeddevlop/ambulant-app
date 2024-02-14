@@ -13,7 +13,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native-gesture-handler";
-import { Portal, Searchbar } from "react-native-paper";
+import { Portal, Searchbar, ActivityIndicator } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { articlesListe } from "../../slices/articleSlice";
 import Article from "./Article";
@@ -23,6 +23,7 @@ import { useIsFocused } from "@react-navigation/native";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
 import { useFonts } from "expo-font";
+import { FlashList } from "@shopify/flash-list";
 
 const VenteAcceuil = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ const VenteAcceuil = ({ navigation }) => {
   const { clientActuelle } = cli;
   const socAct = useSelector((state) => state.societe);
   const { societeActuelle } = socAct;
+  const [load, setLoad] = useState(false);
   const lien = "https://gestpro.globalsystempro.com";
 
   const createPDF = async () => {
@@ -138,11 +140,13 @@ const VenteAcceuil = ({ navigation }) => {
       dispatch(articlesListe());
     }
     if (rech.length != 0) {
+      setLoad(true);
       articles?.articles?.map(
         (artF) =>
           artF.nom.toUpperCase().includes(rech.toUpperCase()) &&
           setArtRech((artRech) => [...artRech, artF])
       );
+      setLoad(false);
     }
     console.log(artRech[0]);
   }, [rech, clientActuelle, isFocused]);
@@ -174,6 +178,20 @@ const VenteAcceuil = ({ navigation }) => {
       alert("Il faut Choisir Un Client!");
     }
   };
+  const renderItem = (a) => {
+    return (
+      <View>
+        <Article article={a.item} source="vente" navigation={navigation} />
+      </View>
+    );
+  };
+  const getItemLayout = (data, index) => ({
+    length: 394.6666564941406,
+    offset: 394.6666564941406 * index,
+    index,
+  });
+  const keyExtractor = (item) => item._id;
+
   return (
     <KeyboardAvoidingView style={style.main}>
       <View style={style.blockCmd}>
@@ -227,19 +245,35 @@ const VenteAcceuil = ({ navigation }) => {
         />
       </View>
 
-      <ScrollView style={style.blockArt}>
-        {rech.length != 0
-          ? artRech?.map((a) => (
-              <View>
-                <Article article={a} source="vente" navigation={navigation} />
-              </View>
-            ))
-          : articles?.articles?.map((a) => (
-              <View>
-                <Article article={a} source="vente" navigation={navigation} />
-              </View>
-            ))}
-      </ScrollView>
+      <View style={style.blockArt}>
+        {loading || load ? (
+          <ActivityIndicator size={"large"} style={{ marginTop: 10 }} />
+        ) : rech.length != 0 ? (
+          <FlashList
+            estimatedItemSize={1000}
+            data={artRech}
+            numColumns={1}
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={20}
+            initialNumToRender={20}
+            renderItem={renderItem}
+            getItemLayout={getItemLayout}
+            keyExtractor={keyExtractor}
+          />
+        ) : (
+          <FlashList
+            estimatedItemSize={1000}
+            data={articles?.articles}
+            numColumns={1}
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={20}
+            initialNumToRender={20}
+            renderItem={renderItem}
+            getItemLayout={getItemLayout}
+            keyExtractor={keyExtractor}
+          />
+        )}
+      </View>
     </KeyboardAvoidingView>
   );
 };

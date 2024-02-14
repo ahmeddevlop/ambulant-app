@@ -5,9 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { ScrollView } from "react-native-gesture-handler";
 import { articlesListe } from "../../slices/articleSlice";
 import { useIsFocused } from "@react-navigation/native";
-import Article from "./Article";
+import Article from "../article/Article";
 import { FlashList } from "@shopify/flash-list";
-const ArticleListe = ({ navigation }) => {
+const StockArticle = ({ navigation }) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const artListe = useSelector((state) => state.article);
@@ -60,4 +60,4 @@ const ArticleListe = ({ navigation }) => {
   );
 };
 
-export default ArticleListe;
+export default StockArticle;

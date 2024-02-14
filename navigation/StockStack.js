@@ -3,6 +3,7 @@ import StockMenu from "../composants/stock/StockMenu";
 import EtatEntree from "../composants/stock/EtatEntree";
 import CommandeDetails from "../composants/commande/CommandeDetails";
 import EtatSortie from "../composants/stock/EtatSortie";
+import StockArticle from "../composants/stock/StockArticle";
 const StockStack = () => {
   const Stack = createNativeStackNavigator();
 
@@ -11,6 +12,7 @@ const StockStack = () => {
       <Stack.Screen name="StcokMenu" component={StockMenu} />
       <Stack.Screen name="EtatEntree" component={EtatEntree} />
       <Stack.Screen name="EtatSortie" component={EtatSortie} />
+      <Stack.Screen name="StockArticle" component={StockArticle} />
 
       <Stack.Screen name="CommandeDetails" component={CommandeDetails} />
     </Stack.Navigator>

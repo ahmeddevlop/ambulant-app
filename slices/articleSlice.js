@@ -9,7 +9,7 @@ export const articlesListe = createAsyncThunk("articlesListe", async () => {
     societe: { societeActuelle },
   } = store.getState();
   const { data } = await axios.get(
-    `${uri}/api/articles/${societeActuelle.code_soc}`
+    `${uri}/api/articles/${societeActuelle.code_soc}?limite=N`
   );
   return data;
 });
