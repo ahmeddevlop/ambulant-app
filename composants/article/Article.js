@@ -5,7 +5,7 @@ import { Button, FAB, Modal, Portal, TextInput } from "react-native-paper";
 import { ajoutChariot } from "../../slices/chariotSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useFonts } from "expo-font";
-const Article = ({ article, source, navigation }) => {
+const Article = ({ article, source, navigation, maj }) => {
   const dispatch = useDispatch();
   const url = "https://gestpro.globalsystempro.com";
   const chListe = useSelector((state) => state.chariot);
@@ -37,45 +37,80 @@ const Article = ({ article, source, navigation }) => {
   return (
     <View style={{ flex: 1, height: "auto", justifyContent: "space-between" }}>
       {source == "consult" ? (
-        <TouchableOpacity
-          style={style.main}
-          onPress={() =>
-            navigation.navigate("ArticleMiseAJour", {
-              article: article,
-            })
-          }
-        >
-          <Image
-            style={{
-              height: 50,
-              width: 50,
-              borderRadius: 25,
-              flex: 1 / 7,
-              alignSelf: "center",
-            }}
-            source={{ uri: url + article?.image }}
-          />
-          <View style={style.libStock}>
-            <Text style={style.text}>{article.nom}</Text>
-            <Text
+        maj == false ? (
+          <View style={style.main}>
+            <Image
               style={{
-                fontSize: 15,
-                marginLeft: 5,
-                //alignSelf: "center",
-                verticalAlign: "middle",
+                height: 50,
+                width: 50,
+                borderRadius: 25,
+                flex: 1 / 7,
+                alignSelf: "center",
               }}
-            >
-              Stock:{article.num_stock}
+              source={{ uri: url + article?.image }}
+            />
+            <View style={style.libStock}>
+              <Text style={style.text}>{article.nom}</Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  marginLeft: 5,
+                  //alignSelf: "center",
+                  verticalAlign: "middle",
+                }}
+              >
+                Stock:{article.num_stock}
+              </Text>
+
+              {/*Block Quantité */}
+
+              {/* Fin Block quantité */}
+            </View>
+            <Text style={{ verticalAlign: "middle", flex: 1.5 / 7 }}>
+              {Number(article.prix_1).toFixed(3)}DT
             </Text>
-
-            {/*Block Quantité */}
-
-            {/* Fin Block quantité */}
           </View>
-          <Text style={{ verticalAlign: "middle", flex: 1.5 / 7 }}>
-            {Number(article.prix_1).toFixed(3)}DT
-          </Text>
-        </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={style.main}
+            onPress={() =>
+              navigation.navigate("ArticleMiseAJour", {
+                article: article,
+              })
+            }
+          >
+            <Image
+              style={{
+                height: 50,
+                width: 50,
+                borderRadius: 25,
+                flex: 1 / 7,
+                alignSelf: "center",
+              }}
+              source={{ uri: url + article?.image }}
+            />
+            <View style={style.libStock}>
+              <Text style={style.text}>{article.nom}</Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  marginLeft: 5,
+                  //alignSelf: "center",
+                  verticalAlign: "middle",
+                }}
+              >
+                Stock:{article.num_stock}
+              </Text>
+
+              {/*Block Quantité */}
+
+              {/* Fin Block quantité */}
+            </View>
+            <Text style={{ verticalAlign: "middle", flex: 1.5 / 7 }}>
+              {Number(article.prix_1).toFixed(3)}DT
+            </Text>
+          </TouchableOpacity>
+        )
       ) : (
         <View style={style.main}>
           <TouchableOpacity
@@ -190,6 +225,9 @@ const Article = ({ article, source, navigation }) => {
                 style={{ padding: 10 }}
               >
                 <View style={{ backgroundColor: "snow", padding: 10 }}>
+                  <Text style={style.text}>
+                    Stock Disponible:{article.num_stock}
+                  </Text>
                   <View style={{ display: "flex", flexDirection: "row" }}>
                     <Text
                       style={{
@@ -299,7 +337,7 @@ const style = StyleSheet.create({
     flex: 1,
   },
   text: {
-    fontSize: 18,
+    fontSize: 14,
     marginLeft: 5,
     //alignSelf: "center",
     verticalAlign: "middle",

@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "redaxios";
 import store from "../store";
-//const uri = "http://192.168.1.21:5050";
-const uri = "https://gestpro.globalsystempro.com";
+const uri = "http://192.168.1.21:5050";
+//const uri = "https://gestpro.globalsystempro.com";
 export const creerAchat = createAsyncThunk("creerAchat", async (achat) => {
   const config = {
     headers: {

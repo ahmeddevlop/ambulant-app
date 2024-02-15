@@ -13,7 +13,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native-gesture-handler";
-import { Searchbar } from "react-native-paper";
+import { Searchbar, ActivityIndicator } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { articlesListe } from "../../slices/articleSlice";
 import Article from "../article/Article";
@@ -23,7 +23,9 @@ import { useIsFocused } from "@react-navigation/native";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
 import { achatListeAction, creerAchat } from "../../slices/achatSlice";
-const AchatLance = () => {
+import { FlashList } from "@shopify/flash-list";
+
+const AchatLance = ({ navigation }) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const [rech, setRech] = useState("");
@@ -38,6 +40,22 @@ const AchatLance = () => {
   const socAct = useSelector((state) => state.societe);
   const { societeActuelle } = socAct;
   const lien = "https://gestpro.globalsystempro.com";
+  const [load, setLoad] = useState(false);
+
+  const renderItem = (a) => {
+    return (
+      <View>
+        <Article article={a.item} source="vente" navigation={navigation} />
+      </View>
+    );
+  };
+  const getItemLayout = (data, index) => ({
+    length: 394.6666564941406,
+    offset: 394.6666564941406 * index,
+    index,
+  });
+  const keyExtractor = (item) => item._id;
+
   const createPDF = async () => {
     const html = `
     <html>
@@ -128,13 +146,14 @@ const AchatLance = () => {
       dispatch(articlesListe());
     }
     if (rech.length != 0) {
+      setLoad(true);
       articles?.articles?.map(
         (artF) =>
           artF.nom.toUpperCase().includes(rech.toUpperCase()) &&
           setArtRech((artRech) => [...artRech, artF])
       );
+      setLoad(false);
     }
-    console.log(artRech[0]);
   }, [rech, fournisseurActuelle, isFocused]);
   const commandeHandler = () => {
     if (Object.keys(fournisseurActuelle).length != 0) {
@@ -218,19 +237,35 @@ const AchatLance = () => {
         />
       </View>
 
-      <ScrollView style={style.blockArt}>
-        {rech.length != 0
-          ? artRech?.map((a) => (
-              <View>
-                <Article article={a} source="vente" />
-              </View>
-            ))
-          : articles?.articles?.map((a) => (
-              <View>
-                <Article article={a} source="vente" />
-              </View>
-            ))}
-      </ScrollView>
+      <View style={style.blockArt}>
+        {loading || load ? (
+          <ActivityIndicator size={"large"} style={{ marginTop: 10 }} />
+        ) : rech.length != 0 ? (
+          <FlashList
+            estimatedItemSize={1000}
+            data={artRech}
+            numColumns={1}
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={20}
+            initialNumToRender={20}
+            renderItem={renderItem}
+            getItemLayout={getItemLayout}
+            keyExtractor={keyExtractor}
+          />
+        ) : (
+          <FlashList
+            estimatedItemSize={1000}
+            data={articles?.articles}
+            numColumns={1}
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={20}
+            initialNumToRender={20}
+            renderItem={renderItem}
+            getItemLayout={getItemLayout}
+            keyExtractor={keyExtractor}
+          />
+        )}
+      </View>
     </KeyboardAvoidingView>
   );
 };

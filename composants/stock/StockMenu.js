@@ -4,6 +4,7 @@ import {
   faDatabase,
   faList,
   faMagnifyingGlass,
+  faTruckMoving,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useState, useEffect } from "react";
@@ -56,6 +57,17 @@ const StockMenu = ({ navigation }) => {
           style={{ flex: 1 / 4, alignSelf: "center" }}
         />
         <Text style={style.zoneText}>Récap Stock</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={style.zone}
+        onPress={() => navigation.navigate("StockMouvement")}
+      >
+        <FontAwesomeIcon
+          icon={faTruckMoving}
+          size={20}
+          style={{ flex: 1 / 4, alignSelf: "center" }}
+        />
+        <Text style={style.zoneText}>Mouvement Stock</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );

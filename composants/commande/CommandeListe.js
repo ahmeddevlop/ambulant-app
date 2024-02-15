@@ -7,6 +7,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import Commande from "./Commande";
 import Ionicons from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
+import { Portal, Searchbar, ActivityIndicator } from "react-native-paper";
 const CommandeListe = ({ navigation }) => {
   const dispatch = useDispatch();
   const cmdListe = useSelector((state) => state.commande);
@@ -17,17 +18,32 @@ const CommandeListe = ({ navigation }) => {
   const [date_f, setDateF] = useState(new Date());
   const [modeF, setModeF] = useState("date");
   const [showF, setShowF] = useState(false);
+  const [cmdCli, setCmdCli] = useState([]);
+  const [rech, setRech] = useState("");
+  const [load, setLoad] = useState(false);
   const isFocused = useIsFocused();
   useEffect(() => {
-    dispatch(commandeListeAction({ date_d, date_f }));
-  }, [date_d, date_f, isFocused]);
+    setCmdCli([]);
+    if (rech == "") {
+      dispatch(commandeListeAction({ date_d, date_f }));
+    } else {
+      if (commandes) {
+        setLoad(true);
+        commandes.map(
+          (cmd) =>
+            cmd.nom_cli.toUpperCase().includes(rech.toUpperCase()) &&
+            setCmdCli((cmdCli) => [...cmdCli, cmd])
+        );
+        setLoad(false);
+      }
+    }
+  }, [date_d, date_f, isFocused, rech]);
 
   const onChangeDateD = (event, selectedDate) => {
     const currentDate = selectedDate || date_d;
     setShowD(false);
     setDateD(currentDate);
   };
-
   const showModeD = (currentMode) => {
     setShowD(true);
     setModeD(currentMode);
@@ -50,6 +66,14 @@ const CommandeListe = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
+      <View style={style.blockRech}>
+        <Searchbar
+          defaultValue={rech}
+          onChangeText={(txt) => setRech(txt)}
+          placeholder="Recherche Commande Par Client"
+          mode="view"
+        />
+      </View>
       <View style={style.dateView}>
         <View style={{ flex: 1 / 2, flexDirection: "row", height: "auto" }}>
           <Pressable
@@ -126,10 +150,14 @@ const CommandeListe = ({ navigation }) => {
         )}
       </View>
       <ScrollView>
-        {commandes?.length != 0 &&
-          commandes?.map((c, i) => (
-            <Commande commande={c} index={i} navigation={navigation} />
-          ))}
+        {rech == ""
+          ? commandes?.length != 0 &&
+            commandes?.map((c, i) => (
+              <Commande commande={c} index={i} navigation={navigation} />
+            ))
+          : cmdCli?.map((c, i) => (
+              <Commande commande={c} index={i} navigation={navigation} />
+            ))}
       </ScrollView>
     </View>
   );
@@ -140,6 +168,12 @@ const style = StyleSheet.create({
     flexDirection: "row",
     marginTop: 5,
     height: "auto",
+  },
+  blockRech: {
+    // flex: 1 / 10,
+
+    marginTop: 1,
+    marginBottom: 10,
   },
 });
 export default CommandeListe;
