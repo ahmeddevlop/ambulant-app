@@ -6,7 +6,6 @@ const uri = "https://gestpro.globalsystempro.com/back_3";
 export const ajoutChariot = createAsyncThunk(
   "ajoutChariot",
   ({ article, qte, prix }) => {
-    console.log("prix:", prix);
     return {
       article: article._id,
       nom: article.nom,

@@ -9,6 +9,7 @@ import clientReducer from "./slices/clientSlice";
 import societeReducer from "./slices/societeSlice";
 import fournisseurReducer from "./slices/fournisseurSlice";
 import achatReducer from "./slices/achatSlice";
+import inventaireReducer from "./slices/inventaireSlice";
 const store = configureStore({
   reducer: {
     famille: familleReducer,
@@ -20,6 +21,7 @@ const store = configureStore({
     societe: societeReducer,
     fournisseur: fournisseurReducer,
     achat: achatReducer,
+    inventaire: inventaireReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

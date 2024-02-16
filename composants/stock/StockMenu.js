@@ -1,10 +1,17 @@
+import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faArrowAltCircleDown,
   faArrowAltCircleUp,
   faDatabase,
+  faFileInvoice,
+  faLadderWater,
+  faLaptop,
   faList,
+  faList12,
   faMagnifyingGlass,
+  faNoteSticky,
   faTruckMoving,
+  faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useState, useEffect } from "react";
@@ -68,6 +75,17 @@ const StockMenu = ({ navigation }) => {
           style={{ flex: 1 / 4, alignSelf: "center" }}
         />
         <Text style={style.zoneText}>Mouvement Stock</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={style.zone}
+        onPress={() => navigation.navigate("InventaireListe")}
+      >
+        <FontAwesomeIcon
+          icon={faWarehouse}
+          size={20}
+          style={{ flex: 1 / 4, alignSelf: "center" }}
+        />
+        <Text style={style.zoneText}>Inventaire Liste</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );

@@ -2,7 +2,7 @@
 // https://aboutreact.com/react-native-login-and-signup/
 
 // Import React and Component
-import React, { useState, createRef } from "react";
+import React, { useState, createRef, useEffect } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -22,6 +22,7 @@ import { Picker } from "@react-native-picker/picker";
 import Loader from "../Loader";
 import axios from "redaxios";
 import { logout, societeAuth } from "../../slices/societeSlice";
+import { useIsFocused } from "@react-navigation/native";
 const SocieteLogin = (props) => {
   const dispatch = useDispatch();
 
@@ -32,7 +33,7 @@ const SocieteLogin = (props) => {
   const [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
   const socAct = useSelector((state) => state.societe);
   const { loading, erreur, societeActuelle } = socAct;
-
+  const isFocused = useIsFocused();
   const handleSubmitButton = async () => {
     setErrortext("");
     dispatch(
@@ -47,7 +48,14 @@ const SocieteLogin = (props) => {
       alert(erreur);
     }
   };
-
+  useEffect(() => {
+    if (
+      Object.keys(societeActuelle).length != 0 &&
+      societeActuelle.active == true
+    ) {
+      props.navigation.navigate("Drawer");
+    }
+  }, [isFocused]);
   if (Object?.keys(societeActuelle)?.length != 0) {
     return (
       <View
