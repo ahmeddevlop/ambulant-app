@@ -145,10 +145,9 @@ const InventaireListe = ({ navigation }) => {
         <Text style={style.text}>Totale</Text>
       </View>
       <ScrollView>
-        {inventaires?.length != 0 &&
-          inventaires?.map((inv, i) => (
-            <Inventaire inventaire={inv} index={i} navigation={navigation} />
-          ))}
+        {inventaires?.map((inv, i) => (
+          <Inventaire inventaire={inv} index={i} navigation={navigation} />
+        ))}
       </ScrollView>
       <FAB
         style={{

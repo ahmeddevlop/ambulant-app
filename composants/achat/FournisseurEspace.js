@@ -82,14 +82,20 @@ const FournisseurEspace = ({ navigation }) => {
         {rech == ""
           ? fournisseurs?.map((f) => (
               <TouchableOpacity
-                onPress={() => dispatch(fournisseurActuelleAction(f))}
+                onPress={() => {
+                  dispatch(fournisseurActuelleAction(f));
+                  navigation.navigate("AchatLance");
+                }}
               >
                 <Fournisseur fournisseur={f} />
               </TouchableOpacity>
             ))
           : frnRech?.map((f) => (
               <TouchableOpacity
-                onPress={() => dispatch(fournisseurActuelleAction(f))}
+                onPress={() => {
+                  dispatch(fournisseurActuelleAction(f));
+                  navigation.navigate("AchatLance");
+                }}
               >
                 <Fournisseur fournisseur={f} />
               </TouchableOpacity>

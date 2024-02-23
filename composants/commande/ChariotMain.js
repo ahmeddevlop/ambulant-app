@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { creerCommande } from "../../slices/commandeSlice";
 import { SuppChariot, revertChariot } from "../../slices/chariotSlice";
@@ -27,21 +34,21 @@ const ChariotMain = ({ navigation }) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
     
     </head>
-    <body style="padding:10">
+    <body style="padding:30;justify-content:center;">
     <div style="display:flex;flex-direction:row;justify-content:space-between;">
     
-      <h1 style="font-size:35;font-weight:bold;">Société:${
+      <h1 style="font-size:40;font-weight:bold;">Société:${
         societeActuelle.nom_soc
       }</h1>
    
-    <div style=" display:flex;flex-direction:column;">      
-      <h1 style="font-size:35;font-weight:bold;">Nom Client:${
+    <div style=" display:flex;flex-direction:column;justify-content:flex-end">      
+      <h1 style="font-size:40;font-weight:bold;">Nom Client:${
         clientActuelle.nom_cli
       }</h1>
-      <h1 style="font-size:35;font-weight:bold;">Code Client:${
+      <h1 style="font-size:40;font-weight:bold;">Code Client:${
         clientActuelle.cod_cli
       }</h1>
-      <h1 style="font-size:35;font-weight:bold;">Date Livraison:${new Date().getDate()}/${
+      <h1 style="font-size:40;font-weight:bold;">Date Livraison:${new Date().getDate()}/${
       new Date().getMonth() + 1
     }/${new Date().getFullYear()}</h1>
     </div>
@@ -63,7 +70,7 @@ const ChariotMain = ({ navigation }) => {
                     margin-left: 0;
                     margin-top: 15;
                     width: 130;
-                    color: rgb(0,120,212);font-size:30;font-weight:bold;
+                    color: rgb(0,120,212);font-size:40;font-weight:bold;
                   "
                 >
                   ${item.nom}
@@ -73,7 +80,7 @@ const ChariotMain = ({ navigation }) => {
                 <h1
                   style="
                     margin-left: 70;
-                    margin-top: 15;font-size:30;font-weight:bold;
+                    margin-top: 15;font-size:40;font-weight:bold;
                   "
                 >
                   ${item.qty}
@@ -83,7 +90,7 @@ const ChariotMain = ({ navigation }) => {
                 <h1
                   style="
                     margin-left: 80;
-                    margin-top: 15;font-size:30;font-weight:bold;
+                    margin-top: 15;font-size:40;font-weight:bold;
                   "
                 >
                   ${(item.prix * item.qty).toFixed(3)} DT
@@ -94,7 +101,7 @@ const ChariotMain = ({ navigation }) => {
        )}
       </div>
   
-      <h1 style="font-size:35;font-weight:bold;justify-self:end;padding:10;">Totale:${chariotListe
+      <h1 style="font-size:50;font-weight:bold;justify-self:end;padding:10;">Prix Totale:${chariotListe
         .reduce((acc, i) => acc + i.prix * i.qty, 0)
         .toFixed(3)}DT</h1>
  
@@ -143,85 +150,30 @@ const ChariotMain = ({ navigation }) => {
     dispatch(SuppChariot(art.article));
   };
   return (
-    <View style={{ flex: 1 }}>
-      {chariotListe.map((art) => (
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            padding: 15,
-            backgroundColor: "snow",
-          }}
-        >
-          <Image
-            style={{
-              height: 50,
-              width: 50,
-              borderRadius: 25,
-              flex: 0.75 / 4,
-              alignSelf: "center",
-            }}
-            source={{ uri: url + art.image }}
-          />
-          <Text
-            style={{
-              flex: 2 / 4,
-              fontSize: 18,
-              verticalAlign: "middle",
-              marginLeft: 5,
-            }}
-          >
-            {art.nom} * {art.qty}
-          </Text>
-          <Text
-            style={{
-              flex: 1 / 3,
-              fontSize: 18,
-              verticalAlign: "middle",
-              marginLeft: 5,
-            }}
-          >
-            {Number(art.prix_achat).toFixed(3)}DT
-          </Text>
-          <TouchableOpacity
-            style={{
-              justifyContent: "center",
-              backgroundColor: "red",
-              flex: 0.5 / 4,
-            }}
-            onPress={() => suppHandler(art)}
-          >
-            <FontAwesomeIcon
-              size={18}
-              icon={faTrashCan}
-              color="snow"
-              style={{ alignSelf: "center" }}
-            />
-          </TouchableOpacity>
-        </View>
-      ))}
+    <View style={{ flex: 1, display: "flex" }}>
       <View style={style.blockCmd}>
         <TouchableOpacity
           style={{
-            backgroundColor: chariotListe.length != 0 ? "#16ab36" : "#77f788",
+            backgroundColor: chariotListe.length != 0 ? "#2FB641" : "#04bfd4",
             height: "100%",
-            alignItems: "center",
-            justifyContent: "center",
+            // alignItems: "center",
+            // justifyContent: "center",
             display: "flex",
-            flexDirection: "row",
+            flexDirection: "column",
+            padding: 10,
           }}
           disabled={chariotListe?.length == 0}
           onPress={commandeHandler}
         >
           <View
             style={{
-              justifyContent: "center",
-              alignItems: "center",
+              //justifyContent: "center",
+              //alignItems: "center",
               flex: 1 / 2,
             }}
           >
             <Text style={style.cmdText}>
-              Charger:
+              Totale :
               {chariotListe
                 ?.reduce((acc, i) => acc + i.prix_achat * i.qty, 0)
                 .toFixed(3)}
@@ -230,8 +182,8 @@ const ChariotMain = ({ navigation }) => {
           </View>
           <View
             style={{
-              justifyContent: "center",
-              alignItems: "center",
+              // justifyContent: "center",
+              // alignItems: "center",
               flex: 1 / 2,
             }}
           >
@@ -241,12 +193,71 @@ const ChariotMain = ({ navigation }) => {
           </View>
         </TouchableOpacity>
       </View>
+      <ScrollView style={{ flex: 8 / 10 }}>
+        {chariotListe.map((art) => (
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              padding: 15,
+              backgroundColor: "snow",
+            }}
+          >
+            <Image
+              style={{
+                height: 50,
+                width: 50,
+                borderRadius: 25,
+                flex: 0.75 / 4,
+                alignSelf: "center",
+              }}
+              source={{ uri: url + art.image }}
+            />
+            <Text
+              style={{
+                flex: 2 / 4,
+                fontSize: 18,
+                verticalAlign: "middle",
+                marginLeft: 5,
+              }}
+            >
+              {art.nom} * {art.qty}
+            </Text>
+            <Text
+              style={{
+                flex: 1 / 3,
+                fontSize: 18,
+                verticalAlign: "middle",
+                marginLeft: 5,
+              }}
+            >
+              {Number(art.prix_achat).toFixed(3)}DT
+            </Text>
+            <TouchableOpacity
+              style={{
+                justifyContent: "center",
+                backgroundColor: "red",
+                flex: 0.5 / 4,
+              }}
+              onPress={() => suppHandler(art)}
+            >
+              <FontAwesomeIcon
+                size={18}
+                icon={faTrashCan}
+                color="snow"
+                style={{ alignSelf: "center" }}
+              />
+            </TouchableOpacity>
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 };
 const style = StyleSheet.create({
   //BlockCmd
   blockCmd: {
+    //flex: 5 / 10,
     flex: 1.5 / 10,
     backgroundColor: "snow",
     padding: 10,

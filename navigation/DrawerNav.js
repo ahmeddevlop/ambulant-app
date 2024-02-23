@@ -18,6 +18,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faBagShopping,
+  faCartShopping,
   faDatabase,
   faEllipsisVertical,
   faListDots,
@@ -121,17 +122,41 @@ const DrawerNav = ({ navigation }) => {
             <View style={{ display: "flex", flexDirection: "row" }}>
               <TouchableOpacity
                 style={{
-                  marginRight: 20,
-                  borderWidth: 0.9,
-                  borderColor: "white",
-                  padding: 5,
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginRight: 15,
                 }}
                 onPress={() => navigation.navigate("ChariotMain")}
               >
-                <Text style={{ color: "white", verticalAlign: "middle" }}>
-                  {chariotListe.reduce((acc, i) => acc + 1, 0)}
-                </Text>
+                <FontAwesomeIcon
+                  icon={faCartShopping}
+                  size={20}
+                  color="white"
+                />
+                {chariotListe && chariotListe.length > 0 && (
+                  <Text
+                    style={{
+                      backgroundColor: "snow",
+                      height: 18,
+                      fontSize: 8,
+                      color: "black",
+                      width: 18,
+                      borderRadius: 50,
+                      textAlign: "center",
+                      style: 0.25 / 2,
+                      verticalAlign: "top",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {chariotListe &&
+                      chariotListe.length > 0 &&
+                      chariotListe.length}
+                  </Text>
+                )}
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={{
                   marginRight: 20,

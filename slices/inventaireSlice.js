@@ -34,6 +34,18 @@ export const inventairesListeAction = createAsyncThunk(
     return data;
   }
 );
+export const inventairesToutListeAction = createAsyncThunk(
+  "inventaireToutListe",
+  async () => {
+    const {
+      societe: { societeActuelle },
+    } = store.getState();
+    const { data } = await axios.get(
+      `${uri}/api/inventaire/invAll/${societeActuelle.code_soc}`
+    );
+    return data;
+  }
+);
 export const inventairesValiderAction = createAsyncThunk(
   "inventaireValider",
   async ({ id, num_stock }) => {
@@ -73,6 +85,7 @@ const inventaireSlice = createSlice({
     succes: null,
     erreur: null,
     inventaires: [],
+    inventairesTout: [],
     resValidation: "",
   },
   extraReducers: (builder) => {
@@ -96,6 +109,17 @@ const inventaireSlice = createSlice({
       state.inventaires = action.payload;
     });
     builder.addCase(inventairesListeAction.rejected, (state, action) => {
+      state.loading = false;
+      state.erreur = action.payload;
+    });
+    builder.addCase(inventairesToutListeAction.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(inventairesToutListeAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.inventairesTout = action.payload;
+    });
+    builder.addCase(inventairesToutListeAction.rejected, (state, action) => {
       state.loading = false;
       state.erreur = action.payload;
     });

@@ -113,6 +113,7 @@ const InventaireDetails = ({ navigation, route }) => {
                 backgroundColor:
                   route.params.inventaire.etat_inv == "I" ? "green" : "red",
               }}
+              disabled={route.params.inventaire.etat_inv != "I"}
               onPress={() => validerInventaire()}
             >
               <Text

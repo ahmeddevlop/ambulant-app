@@ -28,6 +28,7 @@ import Inventaire from "./Inventaire";
 import {
   inventairesListeAction,
   creerInventaire,
+  inventairesToutListeAction,
 } from "../../slices/inventaireSlice";
 
 const InventaireAjout = ({ navigation }) => {
@@ -47,7 +48,7 @@ const InventaireAjout = ({ navigation }) => {
   const [load, setLoad] = useState(false);
   const lien = "https://gestpro.globalsystempro.com";
   const invListe = useSelector((state) => state.inventaire);
-  const { inventaires } = invListe;
+  const { inventaires, inventairesTout } = invListe;
 
   const createPDF = async () => {
     const html = `
@@ -140,7 +141,7 @@ const InventaireAjout = ({ navigation }) => {
     await shareAsync(uri, { UTI: ".pdf", mimeType: "application/pdf" });
   };
   useEffect(() => {
-    dispatch(inventairesListeAction());
+    dispatch(inventairesToutListeAction());
     console.log(inventaires);
     setArtRech([]);
     if (rech.length == 0) {
@@ -155,7 +156,7 @@ const InventaireAjout = ({ navigation }) => {
       );
       setLoad(false);
     }
-  }, [rech, clientActuelle, isFocused]);
+  }, [rech, clientActuelle, isFocused, dispatch]);
   const commandeHandler = () => {
     if (chariotListe.length != 0) {
       dispatch(
@@ -175,6 +176,7 @@ const InventaireAjout = ({ navigation }) => {
       alert("Inventaire Crée avec succés!");
       //createPDF();
       dispatch(revertChariot());
+      navigation.navigate("InventaireListe");
     } else {
       alert("Il faut Choisir Un ou Plusieurs Articles!");
     }
@@ -230,7 +232,7 @@ const InventaireAjout = ({ navigation }) => {
               {new Date().getFullYear()}
             </Text>
             <Text style={style.cmdText}>
-              Numéro:{inventaires && inventaires?.length + 1}
+              Numéro:{inventairesTout && inventairesTout?.length + 1}
             </Text>
           </View>
         </TouchableOpacity>

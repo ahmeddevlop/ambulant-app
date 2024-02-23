@@ -66,6 +66,12 @@ const CommandeListe = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
+      <View style={{ padding: 10, alignItems: "center" }}>
+        <Text style={{ fontSize: 18, color: "blue" }}>
+          Totale Periode :{" "}
+          {commandes?.reduce((acc, i) => i.totalePrix + acc, 0)?.toFixed(3)}
+        </Text>
+      </View>
       <View style={style.blockRech}>
         <Searchbar
           defaultValue={rech}

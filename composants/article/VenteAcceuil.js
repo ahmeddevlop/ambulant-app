@@ -56,7 +56,7 @@ const VenteAcceuil = ({ navigation }) => {
         societeActuelle.nom_soc
       }</h1>
    
-    <div style=" display:flex;flex-direction:column;">      
+    <div style=" display:flex;flex-direction:column;justify-content:flex-end">      
       <h1 style="font-size:40;font-weight:bold;">Nom Client:${
         clientActuelle.nom_cli
       }</h1>
@@ -152,28 +152,7 @@ const VenteAcceuil = ({ navigation }) => {
   }, [rech, clientActuelle, isFocused]);
   const commandeHandler = () => {
     if (Object.keys(clientActuelle).length != 0) {
-      dispatch(
-        creerCommande({
-          chariotListe,
-          nom_soc: societeActuelle.nom_soc,
-          code_soc: societeActuelle.code_soc,
-          societe: societeActuelle._id,
-          articlesPrix: chariotListe
-            ?.reduce((acc, i) => acc + i.prix_achat * i.qty, 0)
-            .toFixed(3),
-          totalePrix: chariotListe
-            ?.reduce((acc, i) => acc + i.prix_achat * i.qty, 0)
-            .toFixed(3),
-          date_livraison: new Date(),
-          client: clientActuelle._id,
-          cod_cli: clientActuelle.cod_cli,
-          nom_cli: clientActuelle.nom_cli,
-        })
-      );
-
-      alert("Commande Crée avec succés!");
-      createPDF();
-      dispatch(revertChariot());
+      navigation.navigate("ChariotMain");
     } else {
       alert("Il faut Choisir Un Client!");
     }
@@ -200,33 +179,33 @@ const VenteAcceuil = ({ navigation }) => {
             //backgroundColor: "red",
             backgroundColor: chariotListe.length != 0 ? "#2FB641" : "#04bfd4",
             height: "100%",
-            alignItems: "center",
-            justifyContent: "center",
+            // alignItems: "center",
+            // justifyContent: "center",
             display: "flex",
-            flexDirection: "row",
+            flexDirection: "column",
+            padding: 10,
           }}
           disabled={chariotListe?.length == 0}
           onPress={commandeHandler}
         >
           <View
             style={{
-              justifyContent: "center",
-              alignItems: "center",
+              // justifyContent: "center",
+              //alignItems: "center",
               flex: 1 / 2,
             }}
           >
             <Text style={style.cmdText}>
-              Charger:
+              Totale :
               {chariotListe
                 ?.reduce((acc, i) => acc + i.prix_achat * i.qty, 0)
                 .toFixed(3)}
-              DT
             </Text>
           </View>
           <View
             style={{
-              justifyContent: "center",
-              alignItems: "center",
+              // justifyContent: "center",
+              // alignItems: "center",
               flex: 1 / 2,
             }}
           >

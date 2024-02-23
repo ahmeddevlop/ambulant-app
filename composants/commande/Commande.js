@@ -7,29 +7,37 @@ const Commande = ({ commande, index, navigation }) => {
   const dispatch = useDispatch();
   const url = "https://gestpro.globalsystempro.com";
   return (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("CommandeDetails", {
-          commande: commande,
-        })
-      }
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        // alignItems: "right",
-        // justifyContent: "right",
-        backgroundColor: index % 2 == 0 ? "#4b8bf2" : "#abc8f7",
-        height: "auto",
-        marginBottom: 5,
-        padding: 5,
-        marginTop: 5,
-      }}
-    >
-      <Text style={style.text}>{commande.date_livraison.substring(0, 10)}</Text>
-
+    <View style={{ backgroundColor: index % 2 == 0 ? "#d0f2a0" : "#ecf7dc" }}>
       <Text style={style.text}>{commande.nom_cli}</Text>
-      <Text style={style.text}>{Number(commande.totalePrix).toFixed(3)}DT</Text>
-    </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("CommandeDetails", {
+            commande: commande,
+          })
+        }
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          // alignItems: "right",
+          // justifyContent: "right",
+
+          height: "auto",
+          marginBottom: 5,
+          padding: 5,
+          marginTop: 5,
+        }}
+      >
+        <Text style={style.text}>
+          {commande.date_livraison.substring(0, 10) +
+            " " +
+            commande.date_livraison.substring(11, 16)}
+        </Text>
+
+        <Text style={style.text}>
+          {Number(commande.totalePrix).toFixed(3)}DT
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 const style = StyleSheet.create({
@@ -39,8 +47,8 @@ const style = StyleSheet.create({
     //alignSelf: "center",
     verticalAlign: "middle",
     //fontWeight: "bold",
-    color: "snow",
-    flex: 1 / 3,
+    color: "black",
+    flex: 1 / 2,
   },
   libStock: {
     display: "flex",
